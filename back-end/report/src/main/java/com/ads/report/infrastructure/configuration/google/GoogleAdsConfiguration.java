@@ -1,5 +1,9 @@
 package com.ads.report.infrastructure.configuration.google;
 
+import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
+import com.ads.report.application.gateway.google.GoogleAdsGateway;
+import com.ads.report.application.usecases.GoogleAdsUseCase;
+import com.ads.report.infrastructure.gateway.google.GoogleAdsRepoGateway;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +18,22 @@ public class GoogleAdsConfiguration {
     @Bean
     public GoogleAdsClient googleAdsClient() throws IOException {
         URL resource = getClass().getClassLoader().getResource("ads.properties");
-        if (resource == null) throw new IllegalArgumentException("Arquivo ads.properties não encontrado no classpath");
-        return GoogleAdsClient.newBuilder()
-            .fromPropertiesFile(new File(resource.getFile()))
-            .build();
+        if (resource == null) throw new IllegalArgumentException("File 'ads.properties' does not found on classpath");
+        return GoogleAdsClient.newBuilder().fromPropertiesFile(new File(resource.getFile())).build();
+    }
+
+    @Bean
+    public GoogleAdsGateway googleAdsGateway() {
+        return new GoogleAdsRepoGateway();
+    }
+
+    @Bean
+    public GoogleAdsUseCase googleAdsUseCase(GoogleAdsClient googleAdsClient, GoogleAdsGateway googleAdsGateway) {
+        return new GoogleAdsUseCase(googleAdsClient, googleAdsGateway);
+    }
+
+    @Bean
+    public GoogleAdsDtoMapper googleAdsDtoMapper() {
+        return new GoogleAdsDtoMapper();
     }
 }
