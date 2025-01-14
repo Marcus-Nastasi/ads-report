@@ -33,17 +33,16 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
 
     @Override
     public List<CampaignMetrics> getCampaignMetrics(String customerId) {
-        List<CampaignMetrics> campaignMetricsList = new ArrayList<>();
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
+            List<CampaignMetrics> campaignMetricsList = new ArrayList<>();
             String query = """
                 SELECT campaign.id, campaign.name, metrics.impressions, metrics.clicks, metrics.cost_micros
-                FROM campaign
-                WHERE segments.date DURING LAST_7_DAYS
+                FROM campaign WHERE segments.date DURING LAST_7_DAYS
             """;
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
-                    .setCustomerId(customerId)
-                    .setQuery(query)
-                    .build();
+                .setCustomerId(customerId)
+                .setQuery(query)
+                .build();
             client.search(request).iterateAll().forEach(row -> {
                 CampaignMetrics campaignMetrics = new CampaignMetrics(
                     row.getCampaign().getId(),
