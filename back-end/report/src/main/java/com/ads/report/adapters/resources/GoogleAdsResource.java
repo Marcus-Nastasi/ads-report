@@ -4,6 +4,7 @@ import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
 import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.domain.google.CampaignMetrics;
+import com.ads.report.domain.google.ManagerAccountInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,5 +37,10 @@ public class GoogleAdsResource {
     @GetMapping("/test")
     public ResponseEntity<TestResponseDto> test() {
         return ResponseEntity.ok(googleAdsDtoMapper.mapToResponse(googleAdsUseCase.testConnection()));
+    }
+
+    @GetMapping("/manager/{id}")
+    public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
+        return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
     }
 }

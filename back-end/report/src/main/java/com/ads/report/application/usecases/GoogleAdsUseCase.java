@@ -2,6 +2,7 @@ package com.ads.report.application.usecases;
 
 import com.ads.report.application.gateway.google.GoogleAdsGateway;
 import com.ads.report.domain.google.CampaignMetrics;
+import com.ads.report.domain.google.ManagerAccountInfo;
 
 import java.util.List;
 
@@ -19,5 +20,9 @@ public class GoogleAdsUseCase {
 
     public List<String> testConnection() throws RuntimeException {
         return googleAdsGateway.testConnection();
+    }
+
+    public ManagerAccountInfo getManagerAccount(String managerAccountId) {
+        return googleAdsGateway.getManagerAccount(managerAccountId);
     }
 }

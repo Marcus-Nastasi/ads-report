@@ -2,6 +2,7 @@ package com.ads.report.infrastructure.gateway.google;
 
 import com.ads.report.application.gateway.google.GoogleAdsGateway;
 import com.ads.report.domain.google.CampaignMetrics;
+import com.ads.report.domain.google.ManagerAccountInfo;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.ads.googleads.v17.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,9 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
 
     @Override
     public List<String> testConnection() throws RuntimeException {
-        final List<String> response = new ArrayList<>();
-            // Create the CustomerService client
+        // Create the CustomerService client
         try (CustomerServiceClient customerServiceClient = googleAdsClient.getLatestVersion().createCustomerServiceClient()) {
+            final List<String> response = new ArrayList<>();
             // Creates request
             ListAccessibleCustomersRequest request = ListAccessibleCustomersRequest.newBuilder().build();
             // Call the API to list the accessible clients
@@ -56,6 +57,29 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             return campaignMetricsList;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar métricas: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ManagerAccountInfo getManagerAccount(String managerAccountId) {
+        try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
+            String query = """
+                SELECT customer.descriptive_name, customer.currency_code, customer.time_zone, customer.test_account
+                FROM customer
+            """;
+            SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
+                .setCustomerId(managerAccountId)
+                .setQuery(query)
+                .build();
+            GoogleAdsRow row = client.search(request).iterateAll().iterator().next(); // Espera apenas um resultado
+            return new ManagerAccountInfo(
+                row.getCustomer().getDescriptiveName(),
+                row.getCustomer().getCurrencyCode(),
+                row.getCustomer().getTimeZone(),
+                row.getCustomer().getTestAccount()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar informações da conta: " + e.getMessage(), e);
         }
     }
 
