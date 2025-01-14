@@ -28,8 +28,8 @@ public class GoogleAdsConfiguration {
     }
 
     @Bean
-    public GoogleAdsUseCase googleAdsUseCase(GoogleAdsClient googleAdsClient, GoogleAdsGateway googleAdsGateway) {
-        return new GoogleAdsUseCase(googleAdsClient, googleAdsGateway);
+    public GoogleAdsUseCase googleAdsUseCase(GoogleAdsGateway googleAdsGateway) {
+        return new GoogleAdsUseCase(googleAdsGateway);
     }
 
     @Bean

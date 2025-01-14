@@ -3,6 +3,7 @@ package com.ads.report.adapters.resources;
 import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
 import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
+import com.ads.report.domain.google.CampaignMetrics;
 import com.google.ads.googleads.v17.services.GoogleAdsRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class GoogleAdsResource {
     }
 
     @GetMapping("/{customerId}")
-    public ResponseEntity<List<GoogleAdsRow>> getAll(@PathVariable String customerId) {
+    public ResponseEntity<List<CampaignMetrics>> getAll(@PathVariable String customerId) {
         return ResponseEntity.ok(googleAdsUseCase.getCampaignMetrics(customerId));
     }
 
