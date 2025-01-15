@@ -84,19 +84,19 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 .setQuery(query)
                 .build();
             // Iterating GoogleAdsRow objects to convert to CampaignMetrics
-            client.search(request).iterateAll().forEach(row -> {
+            for (GoogleAdsRow r: client.search(request).iterateAll()) {
                 CampaignMetrics campaignMetrics = new CampaignMetrics(
-                    row.getCampaign().getId(),
-                    row.getCampaign().getName(),
-                    row.getMetrics().getImpressions(),
-                    row.getMetrics().getClicks(),
-                    row.getMetrics().getCostMicros() / 1_000_000.0, // Converts micros to monetary units
-                    row.getMetrics().getConversions(),             // Conversions total
-                    row.getMetrics().getCtr(),                     // CTR (Click-through rate)
-                    row.getMetrics().getAverageCpc() / 1_000_000.0 // CPC (convert to monetary units)
+                    r.getCampaign().getId(),
+                    r.getCampaign().getName(),
+                    r.getMetrics().getImpressions(),
+                    r.getMetrics().getClicks(),
+                    r.getMetrics().getCostMicros() / 1_000_000.0, // Converts micros to monetary units
+                    r.getMetrics().getConversions(),             // Conversions total
+                    r.getMetrics().getCtr(),                     // CTR (Click-through rate)
+                    r.getMetrics().getAverageCpc() / 1_000_000.0 // CPC (convert to monetary units)
                 );
                 campaignMetricsList.add(campaignMetrics);
-            });
+            }
             return campaignMetricsList;
         } catch (Exception e) {
             throw new RuntimeException("Error searching metrics: " + e.getMessage());

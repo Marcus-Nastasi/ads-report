@@ -3,6 +3,11 @@ package com.ads.report;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
 @SpringBootApplication
 public class ReportApplication {
 
