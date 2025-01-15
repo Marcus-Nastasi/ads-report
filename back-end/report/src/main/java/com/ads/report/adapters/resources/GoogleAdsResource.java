@@ -21,6 +21,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The controller to the application.
+ * <p>
+ * This represents the controller of the application, making possible to request api calls.
+ * <p/>
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
 @RestController
 @RequestMapping("api/reports")
 public class GoogleAdsResource {
@@ -32,6 +42,17 @@ public class GoogleAdsResource {
     @Autowired
     private Gson gson;
 
+    /**
+     * Endpoint to get All campaigns metrics.
+     *
+     * <p>
+     * This method uses an algorithm and the CSVWriter library
+     * to convert the JSON to CSV type.
+     * <p/>
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param response The HttpServletResponse object associated with the response.
+     */
     @GetMapping("/campaign/{customerId}")
     public void getAllCampaignMetrics(@PathVariable String customerId, HttpServletResponse response) {
         String json = gson.toJson(googleAdsUseCase.getCampaignMetrics(customerId));
@@ -52,6 +73,14 @@ public class GoogleAdsResource {
         }
     }
 
+    /**
+     * Endpoint to get aggregated metrics from one client account.
+     *
+     * @param costumerId The id of an adwords customer (client).
+     * @param start_date The start date of the analysis period.
+     * @param end_date The end date of the analysis period.
+     * @return A ResponseEntity of type List of AccountMetrics.
+     */
     @GetMapping("/account/metrics/{customerId}")
     public ResponseEntity<List<AccountMetrics>> getAccountMetrics(
             @PathVariable("customerId") String costumerId,
@@ -60,11 +89,22 @@ public class GoogleAdsResource {
         return ResponseEntity.ok(googleAdsUseCase.getAccountMetrics(costumerId, start_date, end_date));
     }
 
+    /**
+     * Test the connection between the application and the google account.
+     *
+     * @return The TestResponseDto
+     */
     @GetMapping("/test")
     public ResponseEntity<TestResponseDto> test() {
         return ResponseEntity.ok(googleAdsDtoMapper.mapToResponse(googleAdsUseCase.testConnection()));
     }
 
+    /**
+     * Recover the general data of the manager account specified.
+     *
+     * @param id The id of an adwords customer (client).
+     * @return A object of type ManagerAccountInfo, that contains the general MCC info.
+     */
     @GetMapping("/manager/{id}")
     public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
         return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
