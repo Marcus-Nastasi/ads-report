@@ -33,8 +33,7 @@ public class GoogleAdsResource {
 
     @GetMapping("/campaign/{customerId}")
     public void getAllCampaignMetrics(@PathVariable String customerId, HttpServletResponse response) {
-        List<CampaignMetrics> campaignMetrics = googleAdsUseCase.getCampaignMetrics(customerId);
-        String json = gson.toJson(campaignMetrics);
+        String json = gson.toJson(googleAdsUseCase.getCampaignMetrics(customerId));
         List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"campaigns.csv\"");
