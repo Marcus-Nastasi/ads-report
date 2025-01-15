@@ -82,34 +82,4 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             throw new RuntimeException("Erro ao buscar informações da conta: " + e.getMessage(), e);
         }
     }
-
-    //		try {
-//			GoogleAdsClient googleAdsClient = GoogleAdsClient.newBuilder()
-//					.fromPropertiesFile(new File("ads.properties"))
-//					.build();
-
-//			URL resource = ReportApplication.class.getClassLoader().getResource("ads.properties");
-//			if (resource == null) throw new IllegalArgumentException("Arquivo ads.properties não encontrado no classpath");
-//			GoogleAdsClient googleAdsClient = GoogleAdsClient.newBuilder()
-//					.fromPropertiesFile(new File(resource.getFile()))
-//					.setLoginCustomerId(1585076333L)
-//					.build();
-//
-//			try (CustomerServiceClient customerServiceClient = googleAdsClient.getLatestVersion().createCustomerServiceClient()) {
-//				Customer testCustomer = Customer.newBuilder()
-//						.setDescriptiveName("Test Account " + System.currentTimeMillis())
-//						.setCurrencyCode("BRL")
-//						.setTimeZone("America/Sao_Paulo")
-//						.setTestAccount(true) // Define como conta de teste
-//						.build();
-//
-//				CustomerOperation operation = CustomerOperation.newBuilder().setUpdate(testCustomer).build();
-//				MutateCustomerRequest request = MutateCustomerRequest.newBuilder().setOperation(operation).build();
-//
-//				MutateCustomerResponse response = customerServiceClient.mutateCustomer(request);
-//				System.out.printf("Conta de teste criada com sucesso: %s%n", response.getResult().getResourceName());
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 }
