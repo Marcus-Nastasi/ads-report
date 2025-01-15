@@ -3,6 +3,7 @@ package com.ads.report.application.usecases;
 import com.ads.report.application.gateway.google.GoogleAdsGateway;
 import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.manager.ManagerAccountInfo;
+import com.ads.report.domain.metrics.AccountMetrics;
 
 import java.util.List;
 
@@ -24,5 +25,9 @@ public class GoogleAdsUseCase {
 
     public ManagerAccountInfo getManagerAccount(String managerAccountId) {
         return googleAdsGateway.getManagerAccount(managerAccountId);
+    }
+
+    public List<AccountMetrics> getAccountMetrics(String costumerId, String startDate, String endDate) {
+        return googleAdsGateway.getAccountMetrics(costumerId, startDate, endDate);
     }
 }
