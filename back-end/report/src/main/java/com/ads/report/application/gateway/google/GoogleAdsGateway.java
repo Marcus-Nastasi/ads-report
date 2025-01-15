@@ -1,7 +1,7 @@
 package com.ads.report.application.gateway.google;
 
-import com.ads.report.domain.google.CampaignMetrics;
-import com.ads.report.domain.google.ManagerAccountInfo;
+import com.ads.report.domain.campaign.CampaignMetrics;
+import com.ads.report.domain.manager.ManagerAccountInfo;
 
 import java.util.List;
 

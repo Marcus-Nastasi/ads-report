@@ -1,4 +1,4 @@
-package com.ads.report.domain.google;
+package com.ads.report.domain.campaign;
 
 import java.io.Serial;
 import java.io.Serializable;

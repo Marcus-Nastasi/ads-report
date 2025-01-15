@@ -1,8 +1,8 @@
 package com.ads.report.infrastructure.gateway.google;
 
 import com.ads.report.application.gateway.google.GoogleAdsGateway;
-import com.ads.report.domain.google.CampaignMetrics;
-import com.ads.report.domain.google.ManagerAccountInfo;
+import com.ads.report.domain.campaign.CampaignMetrics;
+import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.ads.googleads.v17.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
 
     @Override
     public List<String> testConnection() throws RuntimeException {
-        // Create the CustomerService client
+        // Create the CustomerServiceClient
         try (CustomerServiceClient customerServiceClient = googleAdsClient.getLatestVersion().createCustomerServiceClient()) {
             final List<String> response = new ArrayList<>();
             // Creates request
@@ -60,14 +60,14 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             // Iterating GoogleAdsRow objects to convert to CampaignMetrics
             client.search(request).iterateAll().forEach(row -> {
                 CampaignMetrics campaignMetrics = new CampaignMetrics(
-                        row.getCampaign().getId(),
-                        row.getCampaign().getName(),
-                        row.getMetrics().getImpressions(),
-                        row.getMetrics().getClicks(),
-                        row.getMetrics().getCostMicros() / 1_000_000.0, // Converts micros to monetary units
-                        row.getMetrics().getConversions(),             // Conversions total
-                        row.getMetrics().getCtr(),                     // CTR (Click-through rate)
-                        row.getMetrics().getAverageCpc() / 1_000_000.0 // CPC (convert to monetary units)
+                    row.getCampaign().getId(),
+                    row.getCampaign().getName(),
+                    row.getMetrics().getImpressions(),
+                    row.getMetrics().getClicks(),
+                    row.getMetrics().getCostMicros() / 1_000_000.0, // Converts micros to monetary units
+                    row.getMetrics().getConversions(),             // Conversions total
+                    row.getMetrics().getCtr(),                     // CTR (Click-through rate)
+                    row.getMetrics().getAverageCpc() / 1_000_000.0 // CPC (convert to monetary units)
                 );
                 campaignMetricsList.add(campaignMetrics);
             });
@@ -82,7 +82,11 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
         // Connect to google ads service client
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             String query = """
-                SELECT customer.descriptive_name, customer.currency_code, customer.time_zone, customer.test_account
+                SELECT
+                    customer.descriptive_name,
+                    customer.currency_code,
+                    customer.time_zone,
+                    customer.test_account
                 FROM customer
             """;
             // Build a new request with the customerId and query

@@ -3,8 +3,8 @@ package com.ads.report.adapters.resources;
 import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
 import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
-import com.ads.report.domain.google.CampaignMetrics;
-import com.ads.report.domain.google.ManagerAccountInfo;
+import com.ads.report.domain.campaign.CampaignMetrics;
+import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -32,17 +31,26 @@ public class GoogleAdsResource {
     @Autowired
     private Gson gson;
 
-    @GetMapping("/{customerId}")
-    public void getAll(@PathVariable String customerId, HttpServletResponse response) {
+    @GetMapping("/test")
+    public ResponseEntity<TestResponseDto> test() {
+        return ResponseEntity.ok(googleAdsDtoMapper.mapToResponse(googleAdsUseCase.testConnection()));
+    }
+
+    @GetMapping("/manager/{id}")
+    public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
+        return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
+    }
+
+    @GetMapping("/campaign/{customerId}")
+    public void getAllCampaignMetrics(@PathVariable String customerId, HttpServletResponse response) {
         List<CampaignMetrics> campaignMetrics = googleAdsUseCase.getCampaignMetrics(customerId);
         String json = gson.toJson(campaignMetrics);
-        Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
-        List<Map<String, Object>> records = gson.fromJson(json, listType);
+        List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"campaigns.csv\"");
         try (CSVWriter writer = new CSVWriter(response.getWriter())) {
             if (!records.isEmpty()) {
-                String[] headers = records.get(0).keySet().toArray(new String[0]);
+                String[] headers = records.getFirst().keySet().toArray(new String[0]);
                 writer.writeNext(headers);
             }
             for (Map<String, Object> record : records) {
@@ -52,15 +60,5 @@ public class GoogleAdsResource {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<TestResponseDto> test() {
-        return ResponseEntity.ok(googleAdsDtoMapper.mapToResponse(googleAdsUseCase.testConnection()));
-    }
-
-    @GetMapping("/manager/{id}")
-    public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
-        return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
     }
 }
