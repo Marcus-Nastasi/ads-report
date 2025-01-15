@@ -3,7 +3,6 @@ package com.ads.report.adapters.resources;
 import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
 import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
-import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
