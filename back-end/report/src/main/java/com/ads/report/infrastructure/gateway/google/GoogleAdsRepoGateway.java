@@ -37,8 +37,19 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             List<CampaignMetrics> campaignMetricsList = new ArrayList<>();
             String query = """
-                SELECT campaign.id, campaign.name, metrics.impressions, metrics.clicks, metrics.cost_micros
-                FROM campaign WHERE segments.date DURING LAST_7_DAYS
+                SELECT
+                    campaign.id,
+                    campaign.name,
+                    metrics.impressions,
+                    metrics.clicks,
+                    metrics.cost_micros,
+                    metrics.conversions,
+                    metrics.ctr,
+                    metrics.average_cpc
+                FROM
+                    campaign
+                WHERE
+                    segments.date DURING LAST_7_DAYS
             """;
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
                 .setCustomerId(customerId)
@@ -46,11 +57,14 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 .build();
             client.search(request).iterateAll().forEach(row -> {
                 CampaignMetrics campaignMetrics = new CampaignMetrics(
-                    row.getCampaign().getId(),
-                    row.getCampaign().getName(),
-                    row.getMetrics().getImpressions(),
-                    row.getMetrics().getClicks(),
-                    row.getMetrics().getCostMicros() / 1_000_000.0
+                        row.getCampaign().getId(),
+                        row.getCampaign().getName(),
+                        row.getMetrics().getImpressions(),
+                        row.getMetrics().getClicks(),
+                        row.getMetrics().getCostMicros() / 1_000_000.0,
+                        row.getMetrics().getConversions(),
+                        row.getMetrics().getCtr(),
+                        row.getMetrics().getAverageCpc() / 1_000_000.0
                 );
                 campaignMetricsList.add(campaignMetrics);
             });

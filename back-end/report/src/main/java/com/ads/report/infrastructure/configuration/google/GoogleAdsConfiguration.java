@@ -5,6 +5,8 @@ import com.ads.report.application.gateway.google.GoogleAdsGateway;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.infrastructure.gateway.google.GoogleAdsRepoGateway;
 import com.google.ads.googleads.lib.GoogleAdsClient;
+import com.google.gson.Gson;
+import com.opencsv.CSVWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,5 +37,10 @@ public class GoogleAdsConfiguration {
     @Bean
     public GoogleAdsDtoMapper googleAdsDtoMapper() {
         return new GoogleAdsDtoMapper();
+    }
+
+    @Bean
+    public Gson gson() {
+        return new Gson();
     }
 }
