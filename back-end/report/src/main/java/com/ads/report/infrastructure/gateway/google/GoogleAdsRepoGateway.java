@@ -3,6 +3,7 @@ package com.ads.report.infrastructure.gateway.google;
 import com.ads.report.application.gateway.google.GoogleAdsGateway;
 import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.manager.ManagerAccountInfo;
+import com.ads.report.domain.metrics.AccountMetrics;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.ads.googleads.v17.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,48 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             );
         } catch (Exception e) {
             throw new RuntimeException("Error searching account information: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<AccountMetrics> getAccountMetrics(String customerId, String startDate, String endDate) {
+        List<AccountMetrics> accountMetricsList = new ArrayList<>();
+        String query = String.format("""
+            SELECT
+                customer.id,
+                customer.descriptive_name,
+                metrics.impressions,
+                metrics.clicks,
+                metrics.cost_micros,
+                metrics.conversions,
+                metrics.ctr,
+                metrics.average_cpc
+            FROM customer
+            WHERE segments.date BETWEEN '%s' AND '%s'
+        """, startDate, endDate);
+        try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
+            // Build a new request with the customerId and query
+            SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
+                .setCustomerId(customerId)
+                .setQuery(query)
+                .build();
+            // Iterating GoogleAdsRow objects to convert to CampaignMetrics
+            for (GoogleAdsRow r: client.search(request).iterateAll()) {
+                AccountMetrics accountMetrics = new AccountMetrics(
+                    r.getCustomer().getId(),
+                    r.getCustomer().getDescriptiveName(),
+                    r.getMetrics().getImpressions(),
+                    r.getMetrics().getClicks(),
+                    r.getMetrics().getCostMicros() / 1_000_000.0,
+                    r.getMetrics().getConversions(),
+                    r.getMetrics().getCtr(),
+                    r.getMetrics().getAverageCpc() / 1_000_000.0
+                );
+                accountMetricsList.add(accountMetrics);
+            }
+            return accountMetricsList;
+        } catch (Exception e) {
+            throw new RuntimeException("Error searching account metrics: " + e.getMessage(), e);
         }
     }
 }

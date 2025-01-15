@@ -4,10 +4,12 @@ import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
 import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.domain.manager.ManagerAccountInfo;
+import com.ads.report.domain.metrics.AccountMetrics;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +50,12 @@ public class GoogleAdsResource {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @GetMapping("/account/metrics/{customerId}")
+    public ResponseEntity<List<AccountMetrics>> getAccountMetrics(
+            @PathVariable("customerId") String costumerId, @PathParam("start_date") String start_date, @PathParam("end_date") String end_date) {
+        return ResponseEntity.ok(googleAdsUseCase.getAccountMetrics(costumerId, start_date, end_date));
     }
 
     @GetMapping("/test")
