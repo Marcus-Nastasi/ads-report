@@ -110,7 +110,6 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
     @Override
     public List<AccountMetrics> getAccountMetrics(String customerId, String startDate, String endDate) {
         List<AccountMetrics> accountMetricsList = new ArrayList<>();
-
         String query = String.format("""
             SELECT
                 customer.id,
@@ -126,29 +125,26 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             WHERE
                 segments.date BETWEEN '%s' AND '%s'
         """, startDate, endDate);
-
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
-            // Construir a requisição com customerId e query
+            // Build a new request with the customerId and query
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
-                    .setCustomerId(customerId)
-                    .setQuery(query)
-                    .build();
-
-            // Iterar sobre os resultados e construir a lista de métricas da conta
+                .setCustomerId(customerId)
+                .setQuery(query)
+                .build();
+            // Iterating GoogleAdsRow objects to convert to CampaignMetrics
             client.search(request).iterateAll().forEach(row -> {
                 AccountMetrics accountMetrics = new AccountMetrics(
-                        row.getCustomer().getId(),
-                        row.getCustomer().getDescriptiveName(),
-                        row.getMetrics().getImpressions(),
-                        row.getMetrics().getClicks(),
-                        row.getMetrics().getCostMicros() / 1_000_000.0, // Converte micros em moeda
-                        row.getMetrics().getConversions(),
-                        row.getMetrics().getCtr(),
-                        row.getMetrics().getAverageCpc() / 1_000_000.0 // Converte micros em moeda
+                    row.getCustomer().getId(),
+                    row.getCustomer().getDescriptiveName(),
+                    row.getMetrics().getImpressions(),
+                    row.getMetrics().getClicks(),
+                    row.getMetrics().getCostMicros() / 1_000_000.0,
+                    row.getMetrics().getConversions(),
+                    row.getMetrics().getCtr(),
+                    row.getMetrics().getAverageCpc() / 1_000_000.0
                 );
                 accountMetricsList.add(accountMetrics);
             });
-
             return accountMetricsList;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar métricas da conta: " + e.getMessage(), e);
