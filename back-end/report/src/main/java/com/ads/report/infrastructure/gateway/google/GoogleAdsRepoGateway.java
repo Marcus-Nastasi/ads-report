@@ -28,12 +28,13 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             response.addAll(listed.getResourceNamesList());
             return response;
         } catch (Exception e) {
-            throw new RuntimeException("Error while connecting with MCC: " + e.getMessage());
+            throw new RuntimeException("Failed to connect to MCC: " + e.getMessage());
         }
     }
 
     @Override
     public List<CampaignMetrics> getCampaignMetrics(String customerId) {
+        // Connect to google ads service client
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             List<CampaignMetrics> campaignMetricsList = new ArrayList<>();
             String query = """
@@ -51,41 +52,45 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 WHERE
                     segments.date DURING LAST_7_DAYS
             """;
+            // Build a new request with the customerId and query
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
                 .setCustomerId(customerId)
                 .setQuery(query)
                 .build();
+            // Iterating GoogleAdsRow objects to convert to CampaignMetrics
             client.search(request).iterateAll().forEach(row -> {
                 CampaignMetrics campaignMetrics = new CampaignMetrics(
                         row.getCampaign().getId(),
                         row.getCampaign().getName(),
                         row.getMetrics().getImpressions(),
                         row.getMetrics().getClicks(),
-                        row.getMetrics().getCostMicros() / 1_000_000.0,
-                        row.getMetrics().getConversions(),
-                        row.getMetrics().getCtr(),
-                        row.getMetrics().getAverageCpc() / 1_000_000.0
+                        row.getMetrics().getCostMicros() / 1_000_000.0, // Converts micros to monetary units
+                        row.getMetrics().getConversions(),             // Conversions total
+                        row.getMetrics().getCtr(),                     // CTR (Click-through rate)
+                        row.getMetrics().getAverageCpc() / 1_000_000.0 // CPC (convert to monetary units)
                 );
                 campaignMetricsList.add(campaignMetrics);
             });
             return campaignMetricsList;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar métricas: " + e.getMessage());
+            throw new RuntimeException("Error searching metrics: " + e.getMessage());
         }
     }
 
     @Override
     public ManagerAccountInfo getManagerAccount(String managerAccountId) {
+        // Connect to google ads service client
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             String query = """
                 SELECT customer.descriptive_name, customer.currency_code, customer.time_zone, customer.test_account
                 FROM customer
             """;
+            // Build a new request with the customerId and query
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
                 .setCustomerId(managerAccountId)
                 .setQuery(query)
                 .build();
-            GoogleAdsRow row = client.search(request).iterateAll().iterator().next(); // Espera apenas um resultado
+            GoogleAdsRow row = client.search(request).iterateAll().iterator().next(); // Expects unique return
             return new ManagerAccountInfo(
                 row.getCustomer().getDescriptiveName(),
                 row.getCustomer().getCurrencyCode(),
@@ -93,7 +98,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 row.getCustomer().getTestAccount()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar informações da conta: " + e.getMessage(), e);
+            throw new RuntimeException("Error searching account information: " + e.getMessage(), e);
         }
     }
 }
