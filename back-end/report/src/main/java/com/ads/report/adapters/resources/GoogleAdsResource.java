@@ -54,7 +54,9 @@ public class GoogleAdsResource {
 
     @GetMapping("/account/metrics/{customerId}")
     public ResponseEntity<List<AccountMetrics>> getAccountMetrics(
-            @PathVariable("customerId") String costumerId, @PathParam("start_date") String start_date, @PathParam("end_date") String end_date) {
+            @PathVariable("customerId") String costumerId,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date) {
         return ResponseEntity.ok(googleAdsUseCase.getAccountMetrics(costumerId, start_date, end_date));
     }
 
