@@ -130,19 +130,19 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 .setQuery(query)
                 .build();
             // Iterating GoogleAdsRow objects to convert to CampaignMetrics
-            client.search(request).iterateAll().forEach(row -> {
+            for (GoogleAdsRow r: client.search(request).iterateAll()) {
                 AccountMetrics accountMetrics = new AccountMetrics(
-                    row.getCustomer().getId(),
-                    row.getCustomer().getDescriptiveName(),
-                    row.getMetrics().getImpressions(),
-                    row.getMetrics().getClicks(),
-                    row.getMetrics().getCostMicros() / 1_000_000.0,
-                    row.getMetrics().getConversions(),
-                    row.getMetrics().getCtr(),
-                    row.getMetrics().getAverageCpc() / 1_000_000.0
+                    r.getCustomer().getId(),
+                    r.getCustomer().getDescriptiveName(),
+                    r.getMetrics().getImpressions(),
+                    r.getMetrics().getClicks(),
+                    r.getMetrics().getCostMicros() / 1_000_000.0,
+                    r.getMetrics().getConversions(),
+                    r.getMetrics().getCtr(),
+                    r.getMetrics().getAverageCpc() / 1_000_000.0
                 );
                 accountMetricsList.add(accountMetrics);
-            });
+            }
             return accountMetricsList;
         } catch (Exception e) {
             throw new RuntimeException("Error searching account metrics: " + e.getMessage(), e);
