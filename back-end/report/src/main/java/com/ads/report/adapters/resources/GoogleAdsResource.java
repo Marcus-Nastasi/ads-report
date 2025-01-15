@@ -31,16 +31,6 @@ public class GoogleAdsResource {
     @Autowired
     private Gson gson;
 
-    @GetMapping("/test")
-    public ResponseEntity<TestResponseDto> test() {
-        return ResponseEntity.ok(googleAdsDtoMapper.mapToResponse(googleAdsUseCase.testConnection()));
-    }
-
-    @GetMapping("/manager/{id}")
-    public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
-        return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
-    }
-
     @GetMapping("/campaign/{customerId}")
     public void getAllCampaignMetrics(@PathVariable String customerId, HttpServletResponse response) {
         List<CampaignMetrics> campaignMetrics = googleAdsUseCase.getCampaignMetrics(customerId);
@@ -60,5 +50,15 @@ public class GoogleAdsResource {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<TestResponseDto> test() {
+        return ResponseEntity.ok(googleAdsDtoMapper.mapToResponse(googleAdsUseCase.testConnection()));
+    }
+
+    @GetMapping("/manager/{id}")
+    public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
+        return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
     }
 }
