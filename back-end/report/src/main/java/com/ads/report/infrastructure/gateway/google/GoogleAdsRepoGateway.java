@@ -120,10 +120,8 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 metrics.conversions,
                 metrics.ctr,
                 metrics.average_cpc
-            FROM
-                customer
-            WHERE
-                segments.date BETWEEN '%s' AND '%s'
+            FROM customer
+            WHERE segments.date BETWEEN '%s' AND '%s'
         """, startDate, endDate);
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             // Build a new request with the customerId and query
@@ -147,7 +145,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             });
             return accountMetricsList;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar métricas da conta: " + e.getMessage(), e);
+            throw new RuntimeException("Error searching account metrics: " + e.getMessage(), e);
         }
     }
 }
