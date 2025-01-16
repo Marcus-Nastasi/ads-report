@@ -5,9 +5,9 @@ import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.ads.report.domain.metrics.AccountMetrics;
+import com.ads.report.infrastructure.gateway.csv.JsonToCsvConverter;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.opencsv.CSVWriter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +40,8 @@ public class GoogleAdsResource {
     private GoogleAdsDtoMapper googleAdsDtoMapper;
     @Autowired
     private Gson gson;
+    @Autowired
+    private JsonToCsvConverter jsonToCsvConverter;
 
     /**
      * Endpoint to get All campaigns metrics.
@@ -51,7 +52,7 @@ public class GoogleAdsResource {
      * <p/>
      *
      * @param customerId The id of an adwords customer (client).
-     * @param response The HttpServletResponse object associated with the response.
+     * @param response The response object.
      */
     @GetMapping("/campaign/{customerId}")
     public void getAllCampaignMetrics(@PathVariable String customerId, HttpServletResponse response) {
@@ -60,18 +61,7 @@ public class GoogleAdsResource {
         List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=" + '"' + fileName + '"');
-        try (CSVWriter writer = new CSVWriter(response.getWriter())) {
-            if (!records.isEmpty()) {
-                String[] headers = records.getFirst().keySet().toArray(new String[0]);
-                writer.writeNext(headers);
-            }
-            for (Map<String, Object> record : records) {
-                String[] data = record.values().stream().map(String::valueOf).toArray(String[]::new);
-                writer.writeNext(data);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        jsonToCsvConverter.convert(records, response);
     }
 
     /**
@@ -93,18 +83,7 @@ public class GoogleAdsResource {
         List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=" + '"' + fileName + '"');
-        try (CSVWriter writer = new CSVWriter(response.getWriter())) {
-            if (!records.isEmpty()) {
-                String[] headers = records.getFirst().keySet().toArray(new String[0]);
-                writer.writeNext(headers);
-            }
-            for (Map<String, Object> record : records) {
-                String[] data = record.values().stream().map(String::valueOf).toArray(String[]::new);
-                writer.writeNext(data);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        jsonToCsvConverter.convert(records, response);
     }
 
     /**
