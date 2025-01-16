@@ -1,9 +1,9 @@
 package com.ads.report.application.usecases;
 
-import com.ads.report.application.gateway.google.GoogleAdsGateway;
-import com.ads.report.domain.campaign.CampaignMetrics;
-import com.ads.report.domain.manager.ManagerAccountInfo;
-import com.ads.report.domain.metrics.AccountMetrics;
+import com.ads.report.application.gateway.GoogleAdsGateway;
+import com.ads.report.domain.CampaignMetrics;
+import com.ads.report.domain.ManagerAccountInfo;
+import com.ads.report.domain.AccountMetrics;
 
 import java.util.List;
 

@@ -3,9 +3,9 @@ package com.ads.report.adapters.resources;
 import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
 import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
-import com.ads.report.domain.manager.ManagerAccountInfo;
-import com.ads.report.domain.metrics.AccountMetrics;
-import com.ads.report.infrastructure.gateway.csv.JsonToCsvConverter;
+import com.ads.report.application.usecases.JsonToCsvUseCase;
+import com.ads.report.domain.ManagerAccountInfo;
+import com.ads.report.domain.AccountMetrics;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ public class GoogleAdsResource {
     @Autowired
     private Gson gson;
     @Autowired
-    private JsonToCsvConverter jsonToCsvConverter;
+    private JsonToCsvUseCase jsonToCsv;
 
     /**
      * Endpoint to get All campaigns metrics.
@@ -61,7 +61,7 @@ public class GoogleAdsResource {
         List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=" + '"' + fileName + '"');
-        jsonToCsvConverter.convert(records, response);
+        jsonToCsv.convert(records, response);
     }
 
     /**
@@ -83,7 +83,7 @@ public class GoogleAdsResource {
         List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=" + '"' + fileName + '"');
-        jsonToCsvConverter.convert(records, response);
+        jsonToCsv.convert(records, response);
     }
 
     /**

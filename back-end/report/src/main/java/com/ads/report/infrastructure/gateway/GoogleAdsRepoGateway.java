@@ -1,9 +1,9 @@
-package com.ads.report.infrastructure.gateway.google;
+package com.ads.report.infrastructure.gateway;
 
-import com.ads.report.application.gateway.google.GoogleAdsGateway;
-import com.ads.report.domain.campaign.CampaignMetrics;
-import com.ads.report.domain.manager.ManagerAccountInfo;
-import com.ads.report.domain.metrics.AccountMetrics;
+import com.ads.report.application.gateway.GoogleAdsGateway;
+import com.ads.report.domain.CampaignMetrics;
+import com.ads.report.domain.ManagerAccountInfo;
+import com.ads.report.domain.AccountMetrics;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.ads.googleads.v17.services.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.ads.report.domain.metrics;
+package com.ads.report.domain;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,14 +15,14 @@ public class AccountMetrics implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final long customerId;
-    private final String descriptiveName;
-    private final long impressions;
-    private final long clicks;
-    private final double cost;
-    private final double conversions;
-    private final double ctr;
-    private final double averageCpc;
+    private long customerId;
+    private String descriptiveName;
+    private long impressions;
+    private long clicks;
+    private double cost;
+    private double conversions;
+    private double ctr;
+    private double averageCpc;
 
     public AccountMetrics(long customerId, String descriptiveName, long impressions, long clicks, double cost, double conversions, double ctr, double averageCpc) {
         this.customerId = customerId;
@@ -65,5 +65,37 @@ public class AccountMetrics implements Serializable {
 
     public double getAverageCpc() {
         return averageCpc;
+    }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setDescriptiveName(String descriptiveName) {
+        this.descriptiveName = descriptiveName;
+    }
+
+    public void setImpressions(long impressions) {
+        this.impressions = impressions;
+    }
+
+    public void setClicks(long clicks) {
+        this.clicks = clicks;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public void setConversions(double conversions) {
+        this.conversions = conversions;
+    }
+
+    public void setCtr(double ctr) {
+        this.ctr = ctr;
+    }
+
+    public void setAverageCpc(double averageCpc) {
+        this.averageCpc = averageCpc;
     }
 }

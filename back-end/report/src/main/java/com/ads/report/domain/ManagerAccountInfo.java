@@ -1,4 +1,4 @@
-package com.ads.report.domain.manager;
+package com.ads.report.domain;
 
 import java.io.Serial;
 import java.io.Serializable;

@@ -1,9 +1,9 @@
-package com.ads.report.infrastructure.configuration.google;
+package com.ads.report.infrastructure.configuration;
 
 import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
-import com.ads.report.application.gateway.google.GoogleAdsGateway;
+import com.ads.report.application.gateway.GoogleAdsGateway;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
-import com.ads.report.infrastructure.gateway.google.GoogleAdsRepoGateway;
+import com.ads.report.infrastructure.gateway.GoogleAdsRepoGateway;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
