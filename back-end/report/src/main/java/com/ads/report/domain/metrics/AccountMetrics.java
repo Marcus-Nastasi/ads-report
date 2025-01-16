@@ -1,6 +1,19 @@
 package com.ads.report.domain.metrics;
 
-public class AccountMetrics {
+import java.io.Serial;
+import java.io.Serializable;
+
+/**
+ * The domain of the object that returns from the account metrics api call.
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
+public class AccountMetrics implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final long customerId;
     private final String descriptiveName;

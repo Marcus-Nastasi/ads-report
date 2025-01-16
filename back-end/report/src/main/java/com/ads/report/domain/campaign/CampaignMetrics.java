@@ -3,6 +3,13 @@ package com.ads.report.domain.campaign;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * The domain of the object that returns from the campaign api call.
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
 public class CampaignMetrics implements Serializable {
 
     @Serial

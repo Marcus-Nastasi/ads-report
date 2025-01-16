@@ -3,6 +3,14 @@ package com.ads.report.domain.manager;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * The domain of the object that returns from the manager
+ * account generic information api call.
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
 public class ManagerAccountInfo implements Serializable {
 
     @Serial
