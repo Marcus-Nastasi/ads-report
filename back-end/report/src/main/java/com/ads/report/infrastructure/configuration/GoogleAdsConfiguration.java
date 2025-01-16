@@ -26,6 +26,12 @@ import java.net.URL;
 @Configuration
 public class GoogleAdsConfiguration {
 
+    /**
+     * Bean that generates the google ads client.
+     *
+     * @return Return the adwords client based on an ads.properties file.
+     * @throws IOException If fails to create the client with builder.
+     */
     @Bean
     public GoogleAdsClient googleAdsClient() throws IOException {
         URL resource = getClass().getClassLoader().getResource("ads.properties");

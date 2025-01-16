@@ -18,6 +18,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    /**
+     * Security filter chain configuration.
+     *
+     * @param http A HttpSecurity type object.
+     * @return The security filter chain modified.
+     * @throws Exception If fails to configure the security filter chain.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
