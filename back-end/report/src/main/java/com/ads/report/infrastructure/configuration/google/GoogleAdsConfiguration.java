@@ -13,6 +13,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * The google ads configuration class.
+ *
+ * <p>Here we create the adwords client's bean, based
+ * on the ads.properties file.<p/>
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
 @Configuration
 public class GoogleAdsConfiguration {
 
