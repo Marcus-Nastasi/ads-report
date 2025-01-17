@@ -34,7 +34,7 @@ build/
 
 application.properties
 ads.properties
-credentials.json
+src/main/resources/credentials.json
 oauth2-client.json
 info
 info-data

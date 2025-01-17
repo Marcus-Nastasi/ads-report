@@ -3,6 +3,7 @@ package com.ads.report.adapters.resources;
 import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
 import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
+import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.application.usecases.JsonToCsvUseCase;
 import com.ads.report.domain.ManagerAccountInfo;
 import com.ads.report.domain.AccountMetrics;
@@ -12,10 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -38,6 +36,8 @@ public class GoogleAdsResource {
     private GoogleAdsUseCase googleAdsUseCase;
     @Autowired
     private GoogleAdsDtoMapper googleAdsDtoMapper;
+    @Autowired
+    private GoogleSheetsUseCase googleSheetsUseCase;
     @Autowired
     private Gson gson;
     @Autowired
@@ -76,6 +76,7 @@ public class GoogleAdsResource {
             @PathVariable("customerId") String customerId,
             @PathParam("start_date") String start_date,
             @PathParam("end_date") String end_date,
+            @PathParam("type") String type,
             HttpServletResponse response) {
         List<AccountMetrics> accountMetrics = googleAdsUseCase.getAccountMetrics(customerId, start_date, end_date);
         String json = gson.toJson(accountMetrics);
@@ -105,5 +106,37 @@ public class GoogleAdsResource {
     @GetMapping("/manager/{id}")
     public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
         return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
+    }
+
+    /**
+     * This method allows the user to send data directly from google ads to google sheets.
+     *
+     * <p>
+     * Here the user can pass a adwords customer id, a start date, end date,
+     * a google sheets id and tab, to send the data directly without needing
+     * to download a csv.
+     * <p/>
+     *
+     * @param customer_id The id of an adwords customer (client).
+     * @param start_date The start date of the analysis period.
+     * @param end_date The end date of the analysis period.
+     * @param id The google sheets id.
+     * @param tab The sheets tab to write.
+     * @return Returns a response entity ok if successful.
+     */
+    @PostMapping("/sheets/write/{customer_id}")
+    public ResponseEntity<String> writeToSheet(
+            @PathVariable("customer_id") String customer_id,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date,
+            @PathParam("id") String id,
+            @PathParam("tab") String tab) {
+        try {
+            googleSheetsUseCase
+                .accountMetricsToSheets(id, tab, googleAdsUseCase.getAccountMetrics(customer_id, start_date, end_date));
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to send data to sheets.");
+        }
+        return ResponseEntity.ok("");
     }
 }
