@@ -1,5 +1,7 @@
 package com.ads.report.infrastructure.configuration;
 
+import com.ads.report.application.gateway.GoogleSheetsGateway;
+import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.infrastructure.gateway.GoogleSheetsRepoGateway;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.sheets.v4.Sheets;
@@ -14,9 +16,22 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * The implementation of google sheets interface.
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
 @Configuration
 public class GoogleSheetsConfiguration {
 
+    /**
+     * Google sheets client bean.
+     *
+     * @return A sheets client build.
+     * @throws IOException Throws exception if fails to create or find path.
+     */
     @Bean
     public Sheets googleSheetsService() throws IOException {
         URL resource = getClass().getClassLoader().getResource("credentials.json");
@@ -36,5 +51,10 @@ public class GoogleSheetsConfiguration {
     @Bean
     public GoogleSheetsRepoGateway googleSheetsRepoGateway() {
         return new GoogleSheetsRepoGateway();
+    }
+
+    @Bean
+    public GoogleSheetsUseCase googleSheetsUseCase(GoogleSheetsGateway googleSheetsGateway) {
+        return new GoogleSheetsUseCase(googleSheetsGateway);
     }
 }

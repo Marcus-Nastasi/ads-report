@@ -109,7 +109,7 @@ public class GoogleAdsResource {
     }
 
     /**
-     * This method allows the user to send data directly from google ads to google sheets.
+     * This method allows the user to send client account metrics directly from google ads to google sheets.
      *
      * <p>
      * Here the user can pass a adwords customer id, a start date, end date,
@@ -124,7 +124,7 @@ public class GoogleAdsResource {
      * @param tab The sheets tab to write.
      * @return Returns a response entity ok if successful.
      */
-    @PostMapping("/sheets/write/{customer_id}")
+    @PostMapping("/sheets/account/{customer_id}")
     public ResponseEntity<String> writeToSheet(
             @PathVariable("customer_id") String customer_id,
             @PathParam("start_date") String start_date,
@@ -132,8 +132,35 @@ public class GoogleAdsResource {
             @PathParam("id") String id,
             @PathParam("tab") String tab) {
         try {
-            googleSheetsUseCase
-                .accountMetricsToSheets(id, tab, googleAdsUseCase.getAccountMetrics(customer_id, start_date, end_date));
+            googleSheetsUseCase.accountMetricsToSheets(id, tab, googleAdsUseCase.getAccountMetrics(customer_id, start_date, end_date));
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to send data to sheets.");
+        }
+        return ResponseEntity.ok("");
+    }
+
+    /**
+     * This method allows the user to send campaign metrics directly from google ads to google sheets.
+     *
+     * <p>
+     * Here the user can pass a adwords customer id, a google sheets id and tab, to send the data
+     * directly without needing to download a csv.
+     * <p/>
+     *
+     * @param customer_id The id of an adwords customer (client).
+     * @param id The google sheets id.
+     * @param tab The sheets tab to write.
+     * @return Returns a response entity ok if successful.
+     */
+    @PostMapping("/sheets/campaign/{customer_id}")
+    public ResponseEntity<String> campaignMetricsToSheets(
+            @PathVariable("customer_id") String customer_id,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date,
+            @PathParam("id") String id,
+            @PathParam("tab") String tab) {
+        try {
+            googleSheetsUseCase.campaignMetricsToSheets(id, tab, googleAdsUseCase.getCampaignMetrics(customer_id));
         } catch (Exception e) {
             throw new RuntimeException("Unable to send data to sheets.");
         }
