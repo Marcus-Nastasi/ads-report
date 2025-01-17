@@ -59,11 +59,11 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
      * @throws RuntimeException If fails to request the data.
      */
     @Override
-    public List<CampaignMetrics> getCampaignMetrics(String customerId) {
+    public List<CampaignMetrics> getCampaignMetrics(String customerId, String startDate, String endDate) {
         // Connect to google ads service client
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             List<CampaignMetrics> campaignMetricsList = new ArrayList<>();
-            String query = """
+            String query = String.format("""
                 SELECT
                     campaign.id,
                     campaign.name,
@@ -73,11 +73,9 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                     metrics.conversions,
                     metrics.ctr,
                     metrics.average_cpc
-                FROM
-                    campaign
-                WHERE
-                    segments.date DURING LAST_7_DAYS
-            """;
+                FROM campaign
+                WHERE segments.date BETWEEN '%s' AND '%s'
+            """, startDate, endDate);
             // Build a new request with the customerId and query
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
                 .setCustomerId(customerId)

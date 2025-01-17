@@ -22,12 +22,17 @@ public class GoogleSheetsUseCase {
 
     private final GoogleSheetsGateway googleSheetsGateway;
 
+    /**
+     * Constructor of google sheets use case class.
+     *
+     * @param googleSheetsGateway the interface contract of google sheets available methods.
+     */
     public GoogleSheetsUseCase(GoogleSheetsGateway googleSheetsGateway) {
         this.googleSheetsGateway = googleSheetsGateway;
     }
 
     /**
-     * This method allows the user to send data directly from google ads to google sheets.
+     * This method allows the user to send account metrics directly from google ads to google sheets.
      *
      * <p>
      * Here the user can pass a adwords customer id, a start date, end date,
@@ -45,7 +50,7 @@ public class GoogleSheetsUseCase {
     }
 
     /**
-     * This method allows the user to send data directly from google ads to google sheets.
+     * This method allows the user to send campaign metrics directly from google ads to google sheets.
      *
      * <p>
      * Here the user can pass a adwords customer id, a start date, end date,

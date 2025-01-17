@@ -55,8 +55,12 @@ public class GoogleAdsResource {
      * @param response The response object.
      */
     @GetMapping("/campaign/{customerId}")
-    public void getAllCampaignMetrics(@PathVariable String customerId, HttpServletResponse response) {
-        String json = gson.toJson(googleAdsUseCase.getCampaignMetrics(customerId));
+    public void getAllCampaignMetrics(
+            @PathVariable String customerId,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String endDate,
+            HttpServletResponse response) {
+        String json = gson.toJson(googleAdsUseCase.getCampaignMetrics(customerId, start_date, endDate));
         String fileName = "campaigns-"+customerId+".csv";
         List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
         response.setContentType("text/csv");
@@ -160,7 +164,9 @@ public class GoogleAdsResource {
             @PathParam("id") String id,
             @PathParam("tab") String tab) {
         try {
-            googleSheetsUseCase.campaignMetricsToSheets(id, tab, googleAdsUseCase.getCampaignMetrics(customer_id));
+            googleSheetsUseCase.campaignMetricsToSheets(
+                id, tab, googleAdsUseCase.getCampaignMetrics(customer_id, start_date, end_date)
+            );
         } catch (Exception e) {
             throw new RuntimeException("Unable to send data to sheets.");
         }

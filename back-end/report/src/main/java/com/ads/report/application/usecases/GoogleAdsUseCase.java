@@ -33,8 +33,8 @@ public class GoogleAdsUseCase {
      * @return The status and a list of CampaignMetrics objects.
      * @throws RuntimeException If fails to request the data.
      */
-    public List<CampaignMetrics> getCampaignMetrics(String customerId) throws RuntimeException {
-        return googleAdsGateway.getCampaignMetrics(customerId);
+    public List<CampaignMetrics> getCampaignMetrics(String customerId, String startDate, String endDate) throws RuntimeException {
+        return googleAdsGateway.getCampaignMetrics(customerId, startDate, endDate);
     }
 
     /**
