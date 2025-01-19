@@ -1,4 +1,4 @@
-# Ads Report App
+# Ads Report
 
 ## About the project
 
@@ -35,7 +35,8 @@ Follow the steps below to set up and run the project on your local machine.
 
 1. **Clone this repo**
    
-2. **Configure the 'ads.properties' file on '/src/main/resources':**
+2. **Configure the 'ads.properties' file on '/src/main/resources'.** 
+  **You can see how to generate the credentials on the Google Ads Client Library for Java (https://developers.google.com/google-ads/api/docs/client-libs/java):**
    ```bash
     api.googleads.clientId=[your-client-id]
     api.googleads.clientSecret=[your-client-secret]
@@ -44,7 +45,8 @@ Follow the steps below to set up and run the project on your local machine.
     loginCustomerId=[the-id-of-your-MCC]
 
 3. **Configure the 'credentials.json' file on '/src/main/resources'.**
-  **This file is your google cloud project's service account json file, for your google sheets connection:**
+  **This file is your google cloud project's service account json file,**
+  **for your google sheets connection. You can get orientation on the Google Sheets Client Library (https://developers.google.com/sheets/api/quickstart/java):**
 
 3. **Run the app on your IDE, or run the docker-compose.yml file on "docker" directory:**
     ```bash
