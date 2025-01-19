@@ -43,4 +43,9 @@ Follow the steps below to set up and run the project on your local machine.
     api.googleads.developerToken=[your-developer-token]
     loginCustomerId=[the-id-of-your-MCC]
 
-3. **Run the app on your IDE**
+3. **Configure the 'credentials.json' file on '/src/main/resources'.**
+  **This file is your google cloud project's service account json file, for your google sheets connection:**
+
+3. **Run the app on your IDE, or run the docker-compose.yml file on "docker" directory:**
+    ```bash
+    [sudo] docker-compose up --build -d
