@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  report-app:
+    build:
+      context: ../back-end/report
+      dockerfile: Dockerfile
+    container_name: report-backend
+    ports:
+      - "8080:8080"
+    networks:
+      - report-network
+    # volumes:
+    #   - ./src/main/resources/ads.properties:/app/resources/ads.properties
+    #   - ./src/main/resources/credentials.json:/app/resources/credentials.json
+
+networks:
+  report-network: 
+    driver: bridge

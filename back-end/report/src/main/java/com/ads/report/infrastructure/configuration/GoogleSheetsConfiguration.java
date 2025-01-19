@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -34,18 +33,16 @@ public class GoogleSheetsConfiguration {
      */
     @Bean
     public Sheets googleSheetsService() throws IOException {
-        URL resource = getClass().getClassLoader().getResource("credentials.json");
-        if (resource == null) throw new FileNotFoundException("Credentials not found on 'resources/credentials.json'");
-        try (InputStream inputStream = resource.openStream()) {
-            GoogleCredentials credentials = GoogleCredentials
-                .fromStream(inputStream)
-                .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
-            return new Sheets.Builder(
-                new com.google.api.client.http.javanet.NetHttpTransport(),
-                new GsonFactory(),
-                new HttpCredentialsAdapter(credentials)
-            ).setApplicationName("Ads Report").build();
-        }
+        InputStream resource = getClass().getClassLoader().getResourceAsStream("credentials.json");
+        if (resource == null) throw new FileNotFoundException("Credentials not found in 'resources/credentials.json'");
+        GoogleCredentials credentials = GoogleCredentials
+            .fromStream(resource)
+            .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
+        return new Sheets.Builder(
+            new com.google.api.client.http.javanet.NetHttpTransport(),
+            new GsonFactory(),
+            new HttpCredentialsAdapter(credentials)
+        ).setApplicationName("Ads Report").build();
     }
 
     @Bean

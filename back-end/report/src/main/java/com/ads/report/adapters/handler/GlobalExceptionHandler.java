@@ -7,6 +7,13 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.Map;
 
+/**
+ * The exception handler class.
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

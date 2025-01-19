@@ -41,7 +41,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
     public void accountMetricsToSheets(String spreadsheetId, String tab, List<AccountMetrics> accountMetrics) throws IOException {
         List<List<Object>> sheetData = new ArrayList<>();
         sheetData.add(
-            List.of("customerId", "descriptiveName", "impressions", "clicks", "cost", "conversions",	"ctr",	"averageCpc")
+            List.of("customerId", "descriptiveName", "impressions", "clicks", "cost", "conversions", "ctr",	"averageCpc")
         );
         for (AccountMetrics obj : accountMetrics) {
             List<Object> row = List.of(

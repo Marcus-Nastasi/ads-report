@@ -9,9 +9,9 @@ import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * The google ads configuration class.
@@ -34,9 +34,11 @@ public class GoogleAdsConfiguration {
      */
     @Bean
     public GoogleAdsClient googleAdsClient() throws IOException {
-        URL resource = getClass().getClassLoader().getResource("ads.properties");
-        if (resource == null) throw new IllegalArgumentException("File 'ads.properties' does not found on classpath");
-        return GoogleAdsClient.newBuilder().fromPropertiesFile(new File(resource.getFile())).build();
+        InputStream resource = getClass().getClassLoader().getResourceAsStream("ads.properties");
+        if (resource == null) throw new IllegalArgumentException("File 'ads.properties' not found on classpath");
+        Properties properties = new Properties();
+        properties.load(resource);
+        return GoogleAdsClient.newBuilder().fromProperties(properties).build();
     }
 
     @Bean

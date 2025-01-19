@@ -20,6 +20,7 @@ import java.util.Map;
 
 /**
  * The controller to the application.
+ *
  * <p>
  * This represents the controller of the application, making possible to request api calls.
  * <p/>
@@ -164,9 +165,7 @@ public class GoogleAdsResource {
             @PathParam("id") String id,
             @PathParam("tab") String tab) {
         try {
-            googleSheetsUseCase.campaignMetricsToSheets(
-                id, tab, googleAdsUseCase.getCampaignMetrics(customer_id, start_date, end_date)
-            );
+            googleSheetsUseCase.campaignMetricsToSheets(id, tab, googleAdsUseCase.getCampaignMetrics(customer_id, start_date, end_date));
         } catch (Exception e) {
             throw new RuntimeException("Unable to send data to sheets.");
         }
