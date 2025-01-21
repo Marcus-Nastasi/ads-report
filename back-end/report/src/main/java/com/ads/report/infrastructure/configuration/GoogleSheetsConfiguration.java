@@ -3,6 +3,7 @@ package com.ads.report.infrastructure.configuration;
 import com.ads.report.application.gateway.GoogleSheetsGateway;
 import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.infrastructure.gateway.GoogleSheetsRepoGateway;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.auth.http.HttpCredentialsAdapter;
@@ -39,7 +40,7 @@ public class GoogleSheetsConfiguration {
             .fromStream(resource)
             .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
         return new Sheets.Builder(
-            new com.google.api.client.http.javanet.NetHttpTransport(),
+            new NetHttpTransport(),
             new GsonFactory(),
             new HttpCredentialsAdapter(credentials)
         ).setApplicationName("Ads Report").build();

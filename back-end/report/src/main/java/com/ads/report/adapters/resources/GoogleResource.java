@@ -31,7 +31,7 @@ import java.util.Map;
  * */
 @RestController
 @RequestMapping("api/reports")
-public class GoogleAdsResource {
+public class GoogleResource {
 
     @Autowired
     private GoogleAdsUseCase googleAdsUseCase;
