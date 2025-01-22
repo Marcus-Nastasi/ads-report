@@ -44,7 +44,7 @@ Follow the steps below to set up and run the project on your local machine.
     api.googleads.developerToken=[your-developer-token]
     loginCustomerId=[the-id-of-your-MCC]
 
-.. **Configure the 'credentials.json' file on '/src/main/resources'.**
+3. **Configure the 'credentials.json' file on '/src/main/resources'.**
   **This file is your google cloud project's service account json file,**
   **for your google sheets connection. You can get orientation on the Google Sheets Client Library (https://developers.google.com/sheets/api/quickstart/java):**
 
