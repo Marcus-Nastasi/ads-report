@@ -35,7 +35,7 @@ Follow the steps below to set up and run the project on your local machine.
 
 1. **Clone this repo**
    
-.. **Configure the 'ads.properties' file on '/src/main/resources'.** 
+2. **Configure the 'ads.properties' file on '/src/main/resources'.** 
   **You can see how to generate the credentials on the Google Ads Client Library for Java (https://developers.google.com/google-ads/api/docs/client-libs/java):**
    ```bash
     api.googleads.clientId=[your-client-id]
