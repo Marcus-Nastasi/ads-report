@@ -23,6 +23,7 @@ import java.util.Map;
  *
  * <p>
  * This represents the controller of the application, making possible to request api calls.
+ * To test request, you can request from route /api/reports and look at the routs bellow.
  * <p/>
  *
  * @author Marcus Nastasi
