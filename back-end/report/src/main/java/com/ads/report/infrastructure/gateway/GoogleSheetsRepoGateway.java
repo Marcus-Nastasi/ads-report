@@ -40,9 +40,11 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
     @Override
     public void accountMetricsToSheets(String spreadsheetId, String tab, List<AccountMetrics> accountMetrics) throws IOException {
         List<List<Object>> sheetData = new ArrayList<>();
+        // added sheets headers.
         sheetData.add(
             List.of("customerId", "descriptiveName", "impressions", "clicks", "cost", "conversions", "ctr",	"averageCpc")
         );
+        // iterates in all account metrics objects, and add as a row on sheetData list.
         for (AccountMetrics obj : accountMetrics) {
             List<Object> row = List.of(
                 obj.getCustomerId(),
@@ -57,7 +59,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
             sheetData.add(row);
         }
         ValueRange body = new ValueRange().setValues(sheetData);
-        tab = tab + "!A:Z";
+        tab = tab + "!A:Z"; // sets tab and interval.
         sheetsClient.spreadsheets().values()
             .update(spreadsheetId, tab, body)
             .setValueInputOption("RAW")
@@ -80,7 +82,9 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
     @Override
     public void campaignMetricsToSheets(String spreadsheetId, String tab, List<CampaignMetrics> campaignMetrics) throws IOException {
         List<List<Object>> sheetData = new ArrayList<>();
+        // added sheets headers.
         sheetData.add(List.of("campaignId", "campaignName", "impressions", "clicks", "cost", "conversions", "ctr", "averageCpc"));
+        // iterates in all campaign metrics objects, and add as a row on sheetData list.
         for (CampaignMetrics obj : campaignMetrics) {
             List<Object> row = List.of(
                 obj.getCampaignId(),
@@ -95,7 +99,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
             sheetData.add(row);
         }
         ValueRange body = new ValueRange().setValues(sheetData);
-        tab = tab + "!A:Z";
+        tab = tab + "!A:Z"; // sets tab and interval.
         sheetsClient.spreadsheets().values()
             .update(spreadsheetId, tab, body)
             .setValueInputOption("RAW")
