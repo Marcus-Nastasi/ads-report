@@ -48,6 +48,6 @@ Follow the steps below to set up and run the project on your local machine.
   **This file is your google cloud project's service account json file,**
   **for your google sheets connection. You can get orientation on the Google Sheets Client Library (https://developers.google.com/sheets/api/quickstart/java):**
 
-3. **Run the app on your IDE, or run the docker-compose.yml file on "docker" directory:**
+4. **Run the app on your IDE, or run the docker-compose.yml file on "docker" directory:**
     ```bash
     [sudo] docker-compose up --build -d
