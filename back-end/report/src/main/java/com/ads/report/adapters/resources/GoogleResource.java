@@ -129,7 +129,7 @@ public class GoogleResource {
      * @param tab The sheets tab to write.
      * @return Returns a response entity ok if successful.
      */
-    @PostMapping("/sheets/account/{customer_id}")
+    @GetMapping("/sheets/account/{customer_id}")
     public ResponseEntity<String> writeToSheet(
             @PathVariable("customer_id") String customer_id,
             @PathParam("start_date") String start_date,
@@ -157,7 +157,7 @@ public class GoogleResource {
      * @param tab The sheets tab to write.
      * @return Returns a response entity ok if successful.
      */
-    @PostMapping("/sheets/campaign/{customer_id}")
+    @GetMapping("/sheets/campaign/{customer_id}")
     public ResponseEntity<String> campaignMetricsToSheets(
             @PathVariable("customer_id") String customer_id,
             @PathParam("start_date") String start_date,
