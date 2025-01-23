@@ -51,6 +51,59 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
     }
 
     /**
+     * Get general information of manager account.
+     *
+     * @param managerAccountId The id of an adwords customer (client).
+     *
+     * @return A ManagerAccountInfo type object.
+     * @throws RuntimeException If fails to request the data.
+     */
+    @Override
+    public ManagerAccountInfo getManagerAccount(String managerAccountId) {
+        // Connect to google ads service client
+        try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
+            String query = """
+                SELECT
+                    customer.id,
+                    customer.descriptive_name,
+                    customer.currency_code,
+                    customer.time_zone,
+                    customer.test_account,
+                    customer.status,
+                    customer.manager,
+                    customer.auto_tagging_enabled,
+                    customer.tracking_url_template,
+                    customer.final_url_suffix,
+                    customer.conversion_tracking_setting.conversion_tracking_id,
+                    customer.conversion_tracking_setting.conversion_tracking_status
+                FROM customer
+            """;
+            // Build a new request with the customerId and query
+            SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
+                .setCustomerId(managerAccountId)
+                .setQuery(query)
+                .build();
+            GoogleAdsRow row = client.search(request).iterateAll().iterator().next(); // Expects unique return
+            return new ManagerAccountInfo(
+                String.valueOf(row.getCustomer().getId()),
+                row.getCustomer().getDescriptiveName(),
+                row.getCustomer().getCurrencyCode(),
+                row.getCustomer().getTimeZone(),
+                row.getCustomer().getTestAccount(),
+                row.getCustomer().getStatus().name(),
+                row.getCustomer().getManager(),
+                row.getCustomer().getAutoTaggingEnabled(),
+                row.getCustomer().hasTrackingUrlTemplate() ? row.getCustomer().getTrackingUrlTemplate() : null,
+                row.getCustomer().hasFinalUrlSuffix() ? row.getCustomer().getFinalUrlSuffix() : null,
+                row.getCustomer().getConversionTrackingSetting().hasConversionTrackingId() ? row.getCustomer().getConversionTrackingSetting().getConversionTrackingId() : null,
+                row.getCustomer().getConversionTrackingSetting().getConversionTrackingStatus().name()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Error searching account information: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Get campaigns and it's metrics.
      *
      * @param customerId The id of an adwords customer (client).
@@ -105,59 +158,6 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             return campaignMetricsList;
         } catch (Exception e) {
             throw new RuntimeException("Error searching metrics: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Get general information of manager account.
-     *
-     * @param managerAccountId The id of an adwords customer (client).
-     *
-     * @return A ManagerAccountInfo type object.
-     * @throws RuntimeException If fails to request the data.
-     */
-    @Override
-    public ManagerAccountInfo getManagerAccount(String managerAccountId) {
-        // Connect to google ads service client
-        try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
-            String query = """
-                SELECT
-                    customer.id,
-                    customer.descriptive_name,
-                    customer.currency_code,
-                    customer.time_zone,
-                    customer.test_account,
-                    customer.status,
-                    customer.manager,
-                    customer.auto_tagging_enabled,
-                    customer.tracking_url_template,
-                    customer.final_url_suffix,
-                    customer.conversion_tracking_setting.conversion_tracking_id,
-                    customer.conversion_tracking_setting.conversion_tracking_status
-                FROM customer
-            """;
-            // Build a new request with the customerId and query
-            SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
-                .setCustomerId(managerAccountId)
-                .setQuery(query)
-                .build();
-            GoogleAdsRow row = client.search(request).iterateAll().iterator().next(); // Expects unique return
-            return new ManagerAccountInfo(
-                String.valueOf(row.getCustomer().getId()),
-                row.getCustomer().getDescriptiveName(),
-                row.getCustomer().getCurrencyCode(),
-                row.getCustomer().getTimeZone(),
-                row.getCustomer().getTestAccount(),
-                row.getCustomer().getStatus().name(),
-                row.getCustomer().getManager(),
-                row.getCustomer().getAutoTaggingEnabled(),
-                row.getCustomer().hasTrackingUrlTemplate() ? row.getCustomer().getTrackingUrlTemplate() : null,
-                row.getCustomer().hasFinalUrlSuffix() ? row.getCustomer().getFinalUrlSuffix() : null,
-                row.getCustomer().getConversionTrackingSetting().hasConversionTrackingId() ? row.getCustomer().getConversionTrackingSetting().getConversionTrackingId() : null,
-                row.getCustomer().getConversionTrackingSetting().getConversionTrackingStatus().name()
-            );
-        } catch (Exception e) {
-            throw new RuntimeException("Error searching account information: " + e.getMessage(), e);
         }
     }
 

@@ -116,37 +116,6 @@ public class GoogleResource {
     }
 
     /**
-     * This method allows the user to send client account metrics directly from google ads to google sheets.
-     *
-     * <p>
-     * Here the user can pass a adwords customer id, a start date, end date,
-     * a spreadsheet id and tab, to send the data directly without needing
-     * to download a csv.
-     * <p/>
-     *
-     * @param customer_id The id of an adwords customer (client).
-     * @param start_date The start date of the analysis period.
-     * @param end_date The end date of the analysis period.
-     * @param spreadsheet_id The google sheets id.
-     * @param tab The sheets tab to write.
-     * @return Returns a response entity ok if successful.
-     */
-    @GetMapping("/sheets/account/{customer_id}")
-    public ResponseEntity<String> writeToSheet(
-            @PathVariable("customer_id") String customer_id,
-            @PathParam("start_date") String start_date,
-            @PathParam("end_date") String end_date,
-            @PathParam("spreadsheet_id") String spreadsheet_id,
-            @PathParam("tab") String tab) {
-        try {
-            googleSheetsUseCase.accountMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getAccountMetrics(customer_id, start_date, end_date));
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to send data to sheets.");
-        }
-        return ResponseEntity.ok("");
-    }
-
-    /**
      * This method allows the user to send campaign metrics directly from google ads to google sheets.
      *
      * <p>
@@ -169,6 +138,37 @@ public class GoogleResource {
             @PathParam("active") boolean active) {
         try {
             googleSheetsUseCase.campaignMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getCampaignMetrics(customer_id, start_date, end_date, active));
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to send data to sheets.");
+        }
+        return ResponseEntity.ok("");
+    }
+
+    /**
+     * This method allows the user to send client account metrics directly from google ads to google sheets.
+     *
+     * <p>
+     * Here the user can pass a adwords customer id, a start date, end date,
+     * a spreadsheet id and tab, to send the data directly without needing
+     * to download a csv.
+     * <p/>
+     *
+     * @param customer_id The id of an adwords customer (client).
+     * @param start_date The start date of the analysis period.
+     * @param end_date The end date of the analysis period.
+     * @param spreadsheet_id The google sheets id.
+     * @param tab The sheets tab to write.
+     * @return Returns a response entity ok if successful.
+     */
+    @GetMapping("/sheets/account/{customer_id}")
+    public ResponseEntity<String> accountMetricsToSheet(
+            @PathVariable("customer_id") String customer_id,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date,
+            @PathParam("spreadsheet_id") String spreadsheet_id,
+            @PathParam("tab") String tab) {
+        try {
+            googleSheetsUseCase.accountMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getAccountMetrics(customer_id, start_date, end_date));
         } catch (Exception e) {
             throw new RuntimeException("Unable to send data to sheets.");
         }
