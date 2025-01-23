@@ -12,7 +12,7 @@ services:
     networks:
       - report-network
     ## For production, is recomended to set the volumes for the properties of the app.
-    ## For development you can comment the volumes bellow
+    ## For development you can comment the volumes bellow.
     volumes:
       - ./src/main/resources/ads.properties:/app/resources/ads.properties
       - ./src/main/resources/credentials.json:/app/resources/credentials.json
