@@ -3,6 +3,7 @@ package com.ads.report.infrastructure.gateway;
 import com.ads.report.application.gateway.GoogleSheetsGateway;
 import com.ads.report.domain.AccountMetrics;
 import com.ads.report.domain.CampaignMetrics;
+import com.ads.report.domain.TotalPerDay;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,43 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
                 obj.getAverageCpa(),
                 obj.getCtr(),
                 obj.getAverageCpc()
+            );
+            sheetData.add(row);
+        }
+        ValueRange body = new ValueRange().setValues(sheetData);
+        tab = tab + "!A:Z"; // sets tab and interval.
+        sheetsClient.spreadsheets().values()
+            .update(spreadsheetId, tab, body)
+            .setValueInputOption("RAW")
+            .execute();
+    }
+
+    /**
+     * This method allows the user to send client account metrics, separated per days,
+     * directly from google ads to google sheets.
+     *
+     * <p>
+     * Here the user can pass a adwords customer id, a start date, end date,
+     * a spreadsheet id and tab, to send metrics per day directly without needing
+     * to download a csv.
+     * <p/>
+     *
+     * @param spreadsheetId The google sheets id.
+     * @param tab The sheets tab to write.
+     * @param totalPerDays the list of TotalPerDay objects.
+     * @throws IOException throws IOException if fails.
+     */
+    @Override
+    public void totalPerDayToSheets(String spreadsheetId, String tab, List<TotalPerDay> totalPerDays) throws IOException {
+        List<List<Object>> sheetData = new ArrayList<>();
+        sheetData.add(List.of("date", "impressions", "clicks", "conversions", "cost"));
+        for (TotalPerDay obj : totalPerDays) {
+            List<Object> row = List.of(
+                obj.getDate(),
+                obj.getImpressions(),
+                obj.getClicks(),
+                obj.getCost(),
+                obj.getConversions()
             );
             sheetData.add(row);
         }

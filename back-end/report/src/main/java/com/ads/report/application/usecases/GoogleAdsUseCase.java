@@ -4,6 +4,7 @@ import com.ads.report.application.gateway.GoogleAdsGateway;
 import com.ads.report.domain.CampaignMetrics;
 import com.ads.report.domain.ManagerAccountInfo;
 import com.ads.report.domain.AccountMetrics;
+import com.ads.report.domain.TotalPerDay;
 
 import java.util.List;
 
@@ -71,5 +72,24 @@ public class GoogleAdsUseCase {
      */
     public List<AccountMetrics> getAccountMetrics(String customerId, String startDate, String endDate) {
         return googleAdsGateway.getAccountMetrics(customerId, startDate, endDate);
+    }
+
+    /**
+     * This method allows the user to send client account metrics, separated per days,
+     * directly from google ads to google sheets.
+     *
+     * <p>
+     * Here the user can pass a adwords customer id, a start date, end date,
+     * a spreadsheet id and tab, to send metrics per day directly without needing
+     * to download a csv.
+     * <p/>
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param startDate The start date of the analysis period.
+     * @param endDate The end date of the analysis period.
+     * @return Returns a list of TotalPerDay object.
+     */
+    public List<TotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
+        return googleAdsGateway.getTotalPerDay(customerId, startDate, endDate);
     }
 }

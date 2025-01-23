@@ -4,6 +4,7 @@ import com.ads.report.application.gateway.GoogleAdsGateway;
 import com.ads.report.domain.CampaignMetrics;
 import com.ads.report.domain.ManagerAccountInfo;
 import com.ads.report.domain.AccountMetrics;
+import com.ads.report.domain.TotalPerDay;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.ads.googleads.v17.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
     public List<CampaignMetrics> getCampaignMetrics(String customerId, String startDate, String endDate, boolean active) {
         // Connect to google ads service client
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
-            String is_active = active ? "metrics.impressions > '0'" : "metrics.impressions >= '0'";
+            String isActive = active ? "metrics.impressions > '0'" : "metrics.impressions >= '0'";
             List<CampaignMetrics> campaignMetricsList = new ArrayList<>();
             String query = String.format("""
                 SELECT
@@ -133,7 +134,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 WHERE %s
                 AND segments.date BETWEEN '%s' AND '%s'
                 ORDER BY metrics.conversions DESC
-            """, is_active, startDate, endDate);
+            """, isActive, startDate, endDate);
             // Build a new request with the customerId and query
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
                 .setCustomerId(customerId)
@@ -214,4 +215,62 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             throw new RuntimeException("Error searching account metrics: " + e.getMessage(), e);
         }
     }
+
+    /**
+     * This method allows the user to send client account metrics, separated per days,
+     * directly from google ads to google sheets.
+     *
+     * <p>
+     * Here the user can pass a adwords customer id, a start date, end date,
+     * a spreadsheet id and tab, to send metrics per day directly without needing
+     * to download a csv.
+     * <p/>
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param startDate The start date of the analysis period.
+     * @param endDate The end date of the analysis period.
+     * @return Returns a list of TotalPerDay object.
+     */
+    @Override
+    public List<TotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
+        List<TotalPerDay> totalPerDays = new ArrayList<>();
+        String query = String.format("""
+            SELECT
+              segments.date,
+              metrics.impressions,
+              metrics.clicks,
+              metrics.conversions,
+              metrics.cost_micros
+            FROM
+              customer
+            WHERE
+              segments.date BETWEEN '%s' AND '%s'
+            ORDER BY
+              segments.date
+        """, startDate, endDate);
+        try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
+            // Build a new request with the customerId and query
+            SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
+                .setCustomerId(customerId)
+                .setQuery(query)
+                .build();
+            // Iterating GoogleAdsRow objects to convert to TotalPerDay
+            for (GoogleAdsRow r: client.search(request).iterateAll()) {
+                TotalPerDay totalPerDay = new TotalPerDay(
+                    r.getSegments().getDate(),
+                    r.getMetrics().getImpressions(),
+                    r.getMetrics().getClicks(),
+                    r.getMetrics().getConversions(),
+                    r.getMetrics().getCostMicros() / 1_000_000.0
+                );
+                totalPerDays.add(totalPerDay);
+            }
+            return totalPerDays;
+        } catch (Exception e) {
+            throw new RuntimeException("Error searching per day metrics: " + e.getMessage(), e);
+        }
+    }
+
+    // keyword query
+
 }

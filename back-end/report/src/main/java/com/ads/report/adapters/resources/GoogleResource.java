@@ -7,6 +7,7 @@ import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.application.usecases.JsonToCsvUseCase;
 import com.ads.report.domain.ManagerAccountInfo;
 import com.ads.report.domain.AccountMetrics;
+import com.ads.report.domain.TotalPerDay;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -169,9 +171,37 @@ public class GoogleResource {
             @PathParam("tab") String tab) {
         try {
             googleSheetsUseCase.accountMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getAccountMetrics(customer_id, start_date, end_date));
+            return ResponseEntity.ok("");
         } catch (Exception e) {
             throw new RuntimeException("Unable to send data to sheets.");
         }
+    }
+
+    /**
+     * This method allows the user to send client account metrics, separated per days,
+     * directly from google ads to google sheets.
+     *
+     * <p>
+     * Here the user can pass a adwords customer id, a start date, end date,
+     * a spreadsheet id and tab, to send metrics per day directly without needing
+     * to download a csv.
+     * <p/>
+     *
+     * @param customer_id The id of an adwords customer (client).
+     * @param start_date The start date of the analysis period.
+     * @param end_date The end date of the analysis period.
+     * @param spreadsheet_id The google sheets id.
+     * @param tab The sheets tab to write.
+     * @return Returns a response entity ok if successful.
+     */
+    @GetMapping("/sheets/total/days/{customer_id}")
+    public ResponseEntity<String> getTotalPerDay(
+            @PathVariable("customer_id") String customer_id,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date,
+            @PathParam("spreadsheet_id") String spreadsheet_id,
+            @PathParam("tab") String tab) throws IOException {
+        googleSheetsUseCase.totalPerDaysToSheet(spreadsheet_id, tab, googleAdsUseCase.getTotalPerDay(customer_id, start_date, end_date));
         return ResponseEntity.ok("");
     }
 }
