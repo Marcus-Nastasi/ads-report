@@ -23,8 +23,9 @@ public class AccountMetrics implements Serializable {
     private double conversions;
     private double ctr;
     private double averageCpc;
+    private double averageCpa;
 
-    public AccountMetrics(long customerId, String descriptiveName, long impressions, long clicks, double cost, double conversions, double ctr, double averageCpc) {
+    public AccountMetrics(long customerId, String descriptiveName, long impressions, long clicks, double cost, double conversions, double ctr, double averageCpc, double averageCpa) {
         this.customerId = customerId;
         this.descriptiveName = descriptiveName;
         this.impressions = impressions;
@@ -33,6 +34,7 @@ public class AccountMetrics implements Serializable {
         this.conversions = conversions;
         this.ctr = ctr;
         this.averageCpc = averageCpc;
+        this.averageCpa = averageCpa;
     }
 
     public long getCustomerId() {
@@ -97,5 +99,13 @@ public class AccountMetrics implements Serializable {
 
     public void setAverageCpc(double averageCpc) {
         this.averageCpc = averageCpc;
+    }
+
+    public double getAverageCpa() {
+        return averageCpa;
+    }
+
+    public void setAverageCpa(double averageCpa) {
+        this.averageCpa = averageCpa;
     }
 }

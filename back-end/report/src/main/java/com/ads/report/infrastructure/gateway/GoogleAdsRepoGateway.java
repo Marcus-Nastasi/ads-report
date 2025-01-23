@@ -181,7 +181,8 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 metrics.cost_micros,
                 metrics.conversions,
                 metrics.ctr,
-                metrics.average_cpc
+                metrics.average_cpc,
+                metrics.cost_per_conversion
             FROM customer
             WHERE segments.date BETWEEN '%s' AND '%s'
         """, startDate, endDate);
@@ -201,7 +202,8 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                     r.getMetrics().getCostMicros() / 1_000_000.0,
                     r.getMetrics().getConversions(),
                     r.getMetrics().getCtr(),
-                    r.getMetrics().getAverageCpc() / 1_000_000.0
+                    r.getMetrics().getAverageCpc() / 1_000_000.0,
+                    r.getMetrics().getCostPerConversion() / 1_000_000.0
                 );
                 accountMetricsList.add(accountMetrics);
             }

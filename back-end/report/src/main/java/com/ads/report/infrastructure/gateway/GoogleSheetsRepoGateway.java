@@ -42,7 +42,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
         List<List<Object>> sheetData = new ArrayList<>();
         // added sheets headers.
         sheetData.add(
-            List.of("customerId", "descriptiveName", "impressions", "clicks", "cost", "conversions", "ctr",	"averageCpc")
+            List.of("customerId", "descriptiveName", "impressions", "clicks", "cost", "conversions", "averageCpa", "ctr",	"averageCpc")
         );
         // iterates in all account metrics objects, and add as a row on sheetData list.
         for (AccountMetrics obj : accountMetrics) {
@@ -53,6 +53,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
                 obj.getClicks(),
                 obj.getCost(),
                 obj.getConversions(),
+                obj.getAverageCpa(),
                 obj.getCtr(),
                 obj.getAverageCpc()
             );
