@@ -84,12 +84,13 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
     public void campaignMetricsToSheets(String spreadsheetId, String tab, List<CampaignMetrics> campaignMetrics) throws IOException {
         List<List<Object>> sheetData = new ArrayList<>();
         // added sheets headers.
-        sheetData.add(List.of("campaignId", "campaignName", "impressions", "clicks", "cost", "conversions", "averageCpa", "ctr", "averageCpc"));
+        sheetData.add(List.of("campaignId", "campaignName", "status", "impressions", "clicks", "cost", "conversions", "averageCpa", "ctr", "averageCpc"));
         // iterates in all campaign metrics objects, and add as a row on sheetData list.
         for (CampaignMetrics obj : campaignMetrics) {
             List<Object> row = List.of(
                 obj.getCampaignId(),
                 obj.getCampaignName(),
+                obj.getStatus(),
                 obj.getImpressions(),
                 obj.getClicks(),
                 obj.getCost(),

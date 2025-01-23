@@ -17,6 +17,7 @@ public class CampaignMetrics implements Serializable {
 
     private Long campaignId;
     private String campaignName;
+    private String status;
     private Long impressions;
     private Long clicks;
     private Double cost;
@@ -26,9 +27,10 @@ public class CampaignMetrics implements Serializable {
     private Double averageCpa;
 
 
-    public CampaignMetrics(Long campaignId, String campaignName, Long impressions, Long clicks, Double cost, Double conversions, Double ctr, Double averageCpc, Double averageCpa) {
+    public CampaignMetrics(Long campaignId, String campaignName, String status, Long impressions, Long clicks, Double cost, Double conversions, Double ctr, Double averageCpc, Double averageCpa) {
         this.campaignId = campaignId;
         this.campaignName = campaignName;
+        this.status = status;
         this.impressions = impressions;
         this.clicks = clicks;
         this.cost = cost;
@@ -52,6 +54,14 @@ public class CampaignMetrics implements Serializable {
 
     public void setCampaignName(String campaignName) {
         this.campaignName = campaignName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Long getImpressions() {

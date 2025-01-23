@@ -68,6 +68,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 SELECT
                     campaign.id,
                     campaign.name,
+                    campaign.status,
                     metrics.impressions,
                     metrics.clicks,
                     metrics.cost_micros,
@@ -90,6 +91,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 CampaignMetrics campaignMetrics = new CampaignMetrics(
                     r.getCampaign().getId(),
                     r.getCampaign().getName(),
+                    r.getCampaign().getStatus().toString(),
                     r.getMetrics().getImpressions(),
                     r.getMetrics().getClicks(),
                     r.getMetrics().getCostMicros() / 1_000_000.0, // Converts micros to monetary units
