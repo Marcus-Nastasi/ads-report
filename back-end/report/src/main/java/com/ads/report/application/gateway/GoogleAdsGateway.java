@@ -36,7 +36,7 @@ public interface GoogleAdsGateway {
      * @return The status and a list of CampaignMetrics objects.
      * @throws RuntimeException If fails to request the data.
      */
-    List<CampaignMetrics> getCampaignMetrics(String customerId, String startDate, String endDate);
+    List<CampaignMetrics> getCampaignMetrics(String customerId, String startDate, String endDate, boolean active);
 
     /**
      * Get general information of manager account.

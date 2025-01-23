@@ -61,8 +61,9 @@ public class GoogleResource {
             @PathVariable String customerId,
             @PathParam("start_date") String start_date,
             @PathParam("end_date") String endDate,
+            @PathParam("active") boolean active,
             HttpServletResponse response) {
-        String json = gson.toJson(googleAdsUseCase.getCampaignMetrics(customerId, start_date, endDate));
+        String json = gson.toJson(googleAdsUseCase.getCampaignMetrics(customerId, start_date, endDate, active));
         String fileName = "campaigns-"+customerId+".csv";
         List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
         response.setContentType("text/csv");
@@ -126,7 +127,7 @@ public class GoogleResource {
      * @param customer_id The id of an adwords customer (client).
      * @param start_date The start date of the analysis period.
      * @param end_date The end date of the analysis period.
-     * @param id The google sheets id.
+     * @param spreadsheet_id The google sheets id.
      * @param tab The sheets tab to write.
      * @return Returns a response entity ok if successful.
      */
@@ -154,7 +155,7 @@ public class GoogleResource {
      * <p/>
      *
      * @param customer_id The id of an adwords customer (client).
-     * @param id The google sheets id.
+     * @param spreadsheet_id The google sheets id.
      * @param tab The sheets tab to write.
      * @return Returns a response entity ok if successful.
      */
@@ -164,9 +165,10 @@ public class GoogleResource {
             @PathParam("start_date") String start_date,
             @PathParam("end_date") String end_date,
             @PathParam("spreadsheet_id") String spreadsheet_id,
-            @PathParam("tab") String tab) {
+            @PathParam("tab") String tab,
+            @PathParam("active") boolean active) {
         try {
-            googleSheetsUseCase.campaignMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getCampaignMetrics(customer_id, start_date, end_date));
+            googleSheetsUseCase.campaignMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getCampaignMetrics(customer_id, start_date, end_date, active));
         } catch (Exception e) {
             throw new RuntimeException("Unable to send data to sheets.");
         }

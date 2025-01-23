@@ -59,9 +59,10 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
      * @throws RuntimeException If fails to request the data.
      */
     @Override
-    public List<CampaignMetrics> getCampaignMetrics(String customerId, String startDate, String endDate) {
+    public List<CampaignMetrics> getCampaignMetrics(String customerId, String startDate, String endDate, boolean active) {
         // Connect to google ads service client
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
+            String is_active = active ? "metrics.impressions > '0'" : "metrics.impressions >= '0'";
             List<CampaignMetrics> campaignMetricsList = new ArrayList<>();
             String query = String.format("""
                 SELECT
@@ -72,10 +73,13 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                     metrics.cost_micros,
                     metrics.conversions,
                     metrics.ctr,
-                    metrics.average_cpc
+                    metrics.average_cpc,
+                    metrics.cost_per_conversion
                 FROM campaign
-                WHERE segments.date BETWEEN '%s' AND '%s'
-            """, startDate, endDate);
+                WHERE %s
+                AND segments.date BETWEEN '%s' AND '%s'
+                ORDER BY metrics.conversions DESC
+            """, is_active, startDate, endDate);
             // Build a new request with the customerId and query
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
                 .setCustomerId(customerId)
@@ -91,7 +95,8 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                     r.getMetrics().getCostMicros() / 1_000_000.0, // Converts micros to monetary units
                     r.getMetrics().getConversions(),             // Conversions total
                     r.getMetrics().getCtr(),                     // CTR (Click-through rate)
-                    r.getMetrics().getAverageCpc() / 1_000_000.0 // CPC (convert to monetary units)
+                    r.getMetrics().getAverageCpc() / 1_000_000.0, // CPC (convert to monetary units)
+                    r.getMetrics().getCostPerConversion() / 1_000_000.0 // CPC (convert to monetary units)
                 );
                 campaignMetricsList.add(campaignMetrics);
             }
