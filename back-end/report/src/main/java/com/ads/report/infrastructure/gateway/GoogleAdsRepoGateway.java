@@ -1,14 +1,13 @@
 package com.ads.report.infrastructure.gateway;
 
 import com.ads.report.application.gateway.GoogleAdsGateway;
-import com.ads.report.domain.CampaignMetrics;
-import com.ads.report.domain.ManagerAccountInfo;
-import com.ads.report.domain.AccountMetrics;
-import com.ads.report.domain.TotalPerDay;
+import com.ads.report.domain.*;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.ads.googleads.v17.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -276,6 +275,65 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
         }
     }
 
-    // keyword query
-
+    /**
+     * Implementation to get all keyword metrics from an account.
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param startDate The start date of the analysis period.
+     * @param endDate The end date of the analysis period.
+     * @return A list of KeywordMetrics object.
+     */
+    @Override
+    public List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate) {
+        List<KeywordMetrics> keywordMetrics = new ArrayList<>();
+        String query = String.format("""
+            SELECT
+              campaign.name,
+              ad_group.name,
+              ad_group_criterion.keyword.text,
+              ad_group_criterion.keyword.match_type,
+              metrics.impressions,
+              metrics.clicks,
+              metrics.cost_micros,
+              metrics.average_cpc,
+              metrics.conversions
+            FROM keyword_view
+            WHERE segments.date >= '%s' AND segments.date <= '%s'
+            ORDER BY metrics.conversions DESC
+        """, startDate, endDate);
+        try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
+            // Build a new request with the customerId and query
+            SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
+                .setCustomerId(customerId)
+                .setQuery(query)
+                .build();
+            // Iterating GoogleAdsRow objects to convert to TotalPerDay
+            for (GoogleAdsRow r : client.search(request).iterateAll()) {
+                // Calculates conversion rate
+                BigDecimal conversionRate = BigDecimal.ZERO;
+                if (r.getMetrics().getClicks() > 0) {
+                    conversionRate = BigDecimal.valueOf(r.getMetrics().getConversions())
+                        .divide(BigDecimal.valueOf(r.getMetrics().getClicks()), 2, RoundingMode.HALF_UP)
+                        .multiply(BigDecimal.valueOf(100));
+                }
+                // Create KeywordMetrics object
+                KeywordMetrics keywordMetric = new KeywordMetrics(
+                    r.getCampaign().getName(),
+                    r.getAdGroup().getName(),
+                    r.getAdGroupCriterion().getKeyword().getText(),
+                    r.getAdGroupCriterion().getKeyword().getMatchType().toString(),
+                    r.getMetrics().getImpressions(),
+                    r.getMetrics().getClicks(),
+                    r.getMetrics().getCostMicros() / 1_000_000.0,
+                    r.getMetrics().getAverageCpc(),
+                    r.getMetrics().getConversions(),
+                    conversionRate + "%"
+                );
+                keywordMetrics.add(keywordMetric);
+            }
+            return keywordMetrics;
+        } catch (Exception e) {
+            throw new RuntimeException("Error searching per day metrics: " + e.getMessage(), e);
+        }
+    }
 }

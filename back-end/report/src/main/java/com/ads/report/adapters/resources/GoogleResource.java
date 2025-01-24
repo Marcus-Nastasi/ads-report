@@ -5,6 +5,7 @@ import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.application.usecases.JsonToCsvUseCase;
+import com.ads.report.domain.KeywordMetrics;
 import com.ads.report.domain.ManagerAccountInfo;
 import com.ads.report.domain.AccountMetrics;
 import com.google.common.reflect.TypeToken;
@@ -202,5 +203,21 @@ public class GoogleResource {
             @PathParam("tab") String tab) throws IOException {
         googleSheetsUseCase.totalPerDaysToSheet(spreadsheet_id, tab, googleAdsUseCase.getTotalPerDay(customer_id, start_date, end_date));
         return ResponseEntity.ok("");
+    }
+
+    /**
+     * This method allows the user to get all the keyword metrics from an account, filtering by period.
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param start_date The start date of the analysis period.
+     * @param end_date The end date of the analysis period.
+     * @return Returns a response entity ok if successful.
+     */
+    @GetMapping("/sheets/keywords/{customerId}")
+    public ResponseEntity<List<KeywordMetrics>> getKeywordMetrics(
+            @PathVariable("customerId") String customerId,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date) {
+        return ResponseEntity.ok(googleAdsUseCase.getKeywordMetrics(customerId, start_date, end_date));
     }
 }

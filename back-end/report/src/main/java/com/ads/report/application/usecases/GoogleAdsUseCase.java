@@ -1,10 +1,7 @@
 package com.ads.report.application.usecases;
 
 import com.ads.report.application.gateway.GoogleAdsGateway;
-import com.ads.report.domain.CampaignMetrics;
-import com.ads.report.domain.ManagerAccountInfo;
-import com.ads.report.domain.AccountMetrics;
-import com.ads.report.domain.TotalPerDay;
+import com.ads.report.domain.*;
 
 import java.util.List;
 
@@ -91,5 +88,17 @@ public class GoogleAdsUseCase {
      */
     public List<TotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
         return googleAdsGateway.getTotalPerDay(customerId, startDate, endDate);
+    }
+
+    /**
+     * Use of getting all keyword metrics from an account.
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param startDate The start date of the analysis period.
+     * @param endDate The end date of the analysis period.
+     * @return A list of KeywordMetrics object.
+     */
+    public List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate) {
+        return googleAdsGateway.getKeywordMetrics(customerId, startDate, endDate);
     }
 }
