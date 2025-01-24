@@ -9,9 +9,12 @@ import com.ads.report.domain.ManagerAccountInfo;
 import com.ads.report.domain.AccountMetrics;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +55,9 @@ public class GoogleResource {
      * @return The TestResponseDto
      */
     @GetMapping("/test")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Test the connection", description = "In this route you can test your Google Account connection.")
+    @ApiResponse(responseCode = "200", description = "Returning the accessible accounts.")
     public ResponseEntity<TestResponseDto> test() {
         return ResponseEntity.ok(googleAdsDtoMapper.mapToResponse(googleAdsUseCase.testConnection()));
     }
@@ -63,6 +69,9 @@ public class GoogleResource {
      * @return A object of type ManagerAccountInfo, that contains the general MCC info.
      */
     @GetMapping("/manager/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get manager (MCC) account", description = "In this route you can get general data from MCC.")
+    @ApiResponse(responseCode = "200", description = "Returning general data from MCC.")
     public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
         return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
     }
@@ -79,6 +88,9 @@ public class GoogleResource {
      * @param response The response object.
      */
     @GetMapping("/csv/campaign/{customerId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get all campaign metrics (CSV)", description = "In this route you can get all metrics separated by campaigns, in a certain period.")
+    @ApiResponse(responseCode = "200", description = "Returning the CSV with campaign metrics.")
     public void getAllCampaignMetrics(
             @PathVariable String customerId,
             @PathParam("start_date") String start_date,
@@ -101,6 +113,9 @@ public class GoogleResource {
      * @param end_date The end date of the analysis period.
      */
     @GetMapping("/csv/account/{customerId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get all account metrics (CSV)", description = "In this route you can get all metrics of an account, in a certain period.")
+    @ApiResponse(responseCode = "200", description = "Returning the CSV with account metrics.")
     public void getAccountMetrics(
             @PathVariable("customerId") String customerId,
             @PathParam("start_date") String start_date,
@@ -130,6 +145,9 @@ public class GoogleResource {
      * @return Returns a response entity ok if successful.
      */
     @GetMapping("/sheets/campaign/{customer_id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Send all campaign metrics to sheets", description = "In this route you can send all metrics of a account separated by campaigns, in a certain period.")
+    @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> campaignMetricsToSheets(
             @PathVariable("customer_id") String customer_id,
             @PathParam("start_date") String start_date,
@@ -162,6 +180,9 @@ public class GoogleResource {
      * @return Returns a response entity ok if successful.
      */
     @GetMapping("/sheets/account/{customer_id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Send all account metrics to sheets", description = "In this route you can send all metrics of a account, in a certain period.")
+    @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> accountMetricsToSheet(
             @PathVariable("customer_id") String customer_id,
             @PathParam("start_date") String start_date,
@@ -194,6 +215,9 @@ public class GoogleResource {
      * @return Returns a response entity ok if successful.
      */
     @GetMapping("/sheets/campaign/days/{customer_id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Send all campaign metrics to sheets, separated by days", description = "In this route you can send all metrics of a campaign, separated by campaigns and days, in a certain period.")
+    @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> getTotalPerDay(
             @PathVariable("customer_id") String customer_id,
             @PathParam("start_date") String start_date,
@@ -213,6 +237,9 @@ public class GoogleResource {
      * @return Returns a response entity ok if successful.
      */
     @GetMapping("/sheets/keywords/{customerId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Send all keyword metrics to sheets", description = "In this route you can send all keyword metrics in a certain period.")
+    @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> getKeywordMetrics(
             @PathVariable("customerId") String customerId,
             @PathParam("start_date") String start_date,
