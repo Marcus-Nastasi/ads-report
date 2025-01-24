@@ -214,10 +214,13 @@ public class GoogleResource {
      * @return Returns a response entity ok if successful.
      */
     @GetMapping("/sheets/keywords/{customerId}")
-    public ResponseEntity<List<KeywordMetrics>> getKeywordMetrics(
+    public ResponseEntity<String> getKeywordMetrics(
             @PathVariable("customerId") String customerId,
             @PathParam("start_date") String start_date,
-            @PathParam("end_date") String end_date) {
-        return ResponseEntity.ok(googleAdsUseCase.getKeywordMetrics(customerId, start_date, end_date));
+            @PathParam("end_date") String end_date,
+            @PathParam("spreadsheet_id") String spreadsheet_id,
+            @PathParam("tab") String tab) throws IOException {
+        googleSheetsUseCase.sendKeywordMetrics(spreadsheet_id, tab, googleAdsUseCase.getKeywordMetrics(customerId, start_date, end_date));
+        return ResponseEntity.ok("");
     }
 }

@@ -2,6 +2,7 @@ package com.ads.report.application.gateway;
 
 import com.ads.report.domain.AccountMetrics;
 import com.ads.report.domain.CampaignMetrics;
+import com.ads.report.domain.KeywordMetrics;
 import com.ads.report.domain.TotalPerDay;
 
 import java.io.IOException;
@@ -57,4 +58,7 @@ public interface GoogleSheetsGateway {
      * @throws IOException throws IOException if fails.
      */
     void totalPerDayToSheets(String spreadsheetId, String tab, List<TotalPerDay> totalPerDays) throws IOException;
+
+
+    void sendKeywordMetrics(String spreadsheetId, String tab, List<KeywordMetrics> keywordMetrics) throws IOException;
 }

@@ -3,6 +3,7 @@ package com.ads.report.application.usecases;
 import com.ads.report.application.gateway.GoogleSheetsGateway;
 import com.ads.report.domain.AccountMetrics;
 import com.ads.report.domain.CampaignMetrics;
+import com.ads.report.domain.KeywordMetrics;
 import com.ads.report.domain.TotalPerDay;
 
 import java.io.IOException;
@@ -84,5 +85,9 @@ public class GoogleSheetsUseCase {
      */
     public void totalPerDaysToSheet(String spreadsheetId, String tab, List<TotalPerDay> totalPerDays) throws IOException {
         googleSheetsGateway.totalPerDayToSheets(spreadsheetId, tab, totalPerDays);
+    }
+
+    public void sendKeywordMetrics(String spreadsheetId, String tab, List<KeywordMetrics> keywordMetrics) throws IOException {
+        googleSheetsGateway.sendKeywordMetrics(spreadsheetId, tab, keywordMetrics);
     }
 }

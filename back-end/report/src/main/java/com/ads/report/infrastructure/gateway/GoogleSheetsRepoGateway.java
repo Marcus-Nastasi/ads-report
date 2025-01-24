@@ -3,6 +3,7 @@ package com.ads.report.infrastructure.gateway;
 import com.ads.report.application.gateway.GoogleSheetsGateway;
 import com.ads.report.domain.AccountMetrics;
 import com.ads.report.domain.CampaignMetrics;
+import com.ads.report.domain.KeywordMetrics;
 import com.ads.report.domain.TotalPerDay;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
@@ -134,6 +135,42 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
                 obj.getConversions(),
                 obj.getHour(),
                 obj.getDayOfWeek()
+            );
+            sheetData.add(row);
+        }
+        ValueRange body = new ValueRange().setValues(sheetData);
+        tab = tab + "!A:Z"; // sets tab and interval.
+        sheetsClient.spreadsheets().values()
+            .update(spreadsheetId, tab, body)
+            .setValueInputOption("RAW")
+            .execute();
+    }
+
+    /**
+     * This method implements the keyword metrics sending to sheets.
+     *
+     * @param spreadsheetId The google sheets id.
+     * @param tab The sheets tab to write.
+     * @param keywordMetrics the list of TotalPerDay objects.
+     * @throws IOException throws IOException if fails.
+     */
+    @Override
+    public void sendKeywordMetrics(String spreadsheetId, String tab, List<KeywordMetrics> keywordMetrics) throws IOException {
+        List<List<Object>> sheetData = new ArrayList<>();
+        sheetData.add(List
+            .of("campaignName", "adGroupName", "keywordText", "matchType", "impressions", "clicks", "cost", "averageCpc", "conversions", "conversionRate"));
+        for (KeywordMetrics obj : keywordMetrics) {
+            List<Object> row = List.of(
+                obj.getCampaignName(),
+                obj.getAdGroupName(),
+                obj.getKeywordText(),
+                obj.getMatchType(),
+                obj.getImpressions(),
+                obj.getClicks(),
+                obj.getCost(),
+                obj.getAverageCpc(),
+                obj.getConversions(),
+                obj.getConversionRate()
             );
             sheetData.add(row);
         }
