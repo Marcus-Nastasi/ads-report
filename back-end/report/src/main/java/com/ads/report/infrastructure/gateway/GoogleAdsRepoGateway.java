@@ -284,7 +284,8 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
      * @return A list of KeywordMetrics object.
      */
     @Override
-    public List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate) {
+    public List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate, boolean active) {
+        String isActive = active ? "metrics.impressions > '0'" : "metrics.impressions >= '0'";
         List<KeywordMetrics> keywordMetrics = new ArrayList<>();
         String query = String.format("""
             SELECT
@@ -300,8 +301,9 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
               metrics.conversions
             FROM keyword_view
             WHERE segments.date >= '%s' AND segments.date <= '%s'
+            AND %s
             ORDER BY segments.date ASC, metrics.conversions DESC
-        """, startDate, endDate);
+        """, startDate, endDate, isActive);
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             // Build a new request with the customerId and query
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()

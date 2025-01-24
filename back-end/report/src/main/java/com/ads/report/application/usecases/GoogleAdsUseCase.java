@@ -98,7 +98,7 @@ public class GoogleAdsUseCase {
      * @param endDate The end date of the analysis period.
      * @return A list of KeywordMetrics object.
      */
-    public List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate) {
-        return googleAdsGateway.getKeywordMetrics(customerId, startDate, endDate);
+    public List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate, boolean active) {
+        return googleAdsGateway.getKeywordMetrics(customerId, startDate, endDate, active);
     }
 }

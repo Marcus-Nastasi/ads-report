@@ -5,7 +5,6 @@ import com.ads.report.adapters.output.google.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.application.usecases.JsonToCsvUseCase;
-import com.ads.report.domain.KeywordMetrics;
 import com.ads.report.domain.ManagerAccountInfo;
 import com.ads.report.domain.AccountMetrics;
 import com.google.common.reflect.TypeToken;
@@ -219,8 +218,9 @@ public class GoogleResource {
             @PathParam("start_date") String start_date,
             @PathParam("end_date") String end_date,
             @PathParam("spreadsheet_id") String spreadsheet_id,
-            @PathParam("tab") String tab) throws IOException {
-        googleSheetsUseCase.sendKeywordMetrics(spreadsheet_id, tab, googleAdsUseCase.getKeywordMetrics(customerId, start_date, end_date));
+            @PathParam("tab") String tab,
+            @PathParam("active") boolean active) throws IOException {
+        googleSheetsUseCase.sendKeywordMetrics(spreadsheet_id, tab, googleAdsUseCase.getKeywordMetrics(customerId, start_date, end_date, active));
         return ResponseEntity.ok("");
     }
 }

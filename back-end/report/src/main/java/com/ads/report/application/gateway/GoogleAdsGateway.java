@@ -75,7 +75,8 @@ public interface GoogleAdsGateway {
      * @param customerId The id of an adwords customer (client).
      * @param startDate The start date of the analysis period.
      * @param endDate The end date of the analysis period.
+     * @param active Select if the keyword have had any impressions or cost.
      * @return A list of KeywordMetrics object.
      */
-    List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate);
+    List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate, boolean active);
 }
