@@ -240,13 +240,12 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
               metrics.impressions,
               metrics.clicks,
               metrics.conversions,
-              metrics.cost_micros
-            FROM
-              customer
-            WHERE
-              segments.date BETWEEN '%s' AND '%s'
-            ORDER BY
-              segments.date
+              metrics.cost_micros,
+              segments.hour,
+              segments.day_of_week
+            FROM customer
+            WHERE segments.date BETWEEN '%s' AND '%s'
+            ORDER BY segments.date
         """, startDate, endDate);
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             // Build a new request with the customerId and query
@@ -261,7 +260,13 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                     r.getMetrics().getImpressions(),
                     r.getMetrics().getClicks(),
                     r.getMetrics().getConversions(),
-                    r.getMetrics().getCostMicros() / 1_000_000.0
+                    r.getMetrics().getCostMicros() / 1_000_000.0,
+                    r.getCampaign().getName(),
+                    r.getAdGroup().getName(),
+                    r.getSegments().getKeyword().getInfo().getMatchType().name(),
+                    r.getSegments().getKeyword().getInfo().getText(),
+                    r.getSegments().getHour(),
+                    r.getSegments().getDayOfWeek().name()
                 );
                 totalPerDays.add(totalPerDay);
             }

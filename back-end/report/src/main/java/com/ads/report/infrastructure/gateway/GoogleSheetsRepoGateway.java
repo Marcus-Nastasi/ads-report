@@ -126,14 +126,16 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
     @Override
     public void totalPerDayToSheets(String spreadsheetId, String tab, List<TotalPerDay> totalPerDays) throws IOException {
         List<List<Object>> sheetData = new ArrayList<>();
-        sheetData.add(List.of("date", "impressions", "clicks", "conversions", "cost"));
+        sheetData.add(List.of("date", "impressions", "clicks", "conversions", "cost", "hour", "dayOfWeek"));
         for (TotalPerDay obj : totalPerDays) {
             List<Object> row = List.of(
                 obj.getDate(),
                 obj.getImpressions(),
                 obj.getClicks(),
                 obj.getCost(),
-                obj.getConversions()
+                obj.getConversions(),
+                obj.getHour(),
+                obj.getDayOfWeek()
             );
             sheetData.add(row);
         }
