@@ -288,6 +288,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
         List<KeywordMetrics> keywordMetrics = new ArrayList<>();
         String query = String.format("""
             SELECT
+              segments.date,
               campaign.name,
               ad_group.name,
               ad_group_criterion.keyword.text,
@@ -299,7 +300,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
               metrics.conversions
             FROM keyword_view
             WHERE segments.date >= '%s' AND segments.date <= '%s'
-            ORDER BY metrics.conversions DESC
+            ORDER BY segments.date ASC, metrics.conversions DESC
         """, startDate, endDate);
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             // Build a new request with the customerId and query
@@ -308,7 +309,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 .setQuery(query)
                 .build();
             // Iterating GoogleAdsRow objects to convert to TotalPerDay
-            for (GoogleAdsRow r : client.search(request).iterateAll()) {
+            for (GoogleAdsRow r: client.search(request).iterateAll()) {
                 // Calculates conversion rate
                 BigDecimal conversionRate = BigDecimal.ZERO;
                 if (r.getMetrics().getClicks() > 0) {
@@ -318,6 +319,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 }
                 // Create KeywordMetrics object
                 KeywordMetrics keywordMetric = new KeywordMetrics(
+                    r.getSegments().getDate(),
                     r.getCampaign().getName(),
                     r.getAdGroup().getName(),
                     r.getAdGroupCriterion().getKeyword().getText(),
@@ -333,7 +335,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             }
             return keywordMetrics;
         } catch (Exception e) {
-            throw new RuntimeException("Error searching per day metrics: " + e.getMessage(), e);
+            throw new RuntimeException("Error searching keyword metrics: " + e.getMessage(), e);
         }
     }
 }

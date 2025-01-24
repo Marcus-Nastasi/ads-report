@@ -158,9 +158,10 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
     public void sendKeywordMetrics(String spreadsheetId, String tab, List<KeywordMetrics> keywordMetrics) throws IOException {
         List<List<Object>> sheetData = new ArrayList<>();
         sheetData.add(List
-            .of("campaignName", "adGroupName", "keywordText", "matchType", "impressions", "clicks", "cost", "averageCpc", "conversions", "conversionRate"));
+            .of("date", "campaignName", "adGroupName", "keywordText", "matchType", "impressions", "clicks", "cost", "averageCpc", "conversions", "conversionRate"));
         for (KeywordMetrics obj : keywordMetrics) {
             List<Object> row = List.of(
+                obj.getDate(),
                 obj.getCampaignName(),
                 obj.getAdGroupName(),
                 obj.getKeywordText(),

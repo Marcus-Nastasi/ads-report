@@ -2,6 +2,7 @@ package com.ads.report.domain;
 
 public class KeywordMetrics {
 
+    private String date;
     private String campaignName;
     private String adGroupName;
     private String keywordText;
@@ -13,7 +14,8 @@ public class KeywordMetrics {
     private double conversions;
     private String conversionRate;
 
-    public KeywordMetrics(String campaignName, String adGroupName, String keywordText, String matchType, Long impressions, Long clicks, double cost, double averageCpc, double conversions, String conversionRate) {
+    public KeywordMetrics(String date, String campaignName, String adGroupName, String keywordText, String matchType, Long impressions, Long clicks, double cost, double averageCpc, double conversions, String conversionRate) {
+        this.date = date;
         this.campaignName = campaignName;
         this.adGroupName = adGroupName;
         this.keywordText = keywordText;
@@ -24,6 +26,14 @@ public class KeywordMetrics {
         this.averageCpc = averageCpc;
         this.conversions = conversions;
         this.conversionRate = conversionRate;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getCampaignName() {
