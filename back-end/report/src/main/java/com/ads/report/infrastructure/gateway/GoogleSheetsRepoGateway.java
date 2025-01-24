@@ -109,13 +109,11 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
     }
 
     /**
-     * This method allows the user to send client account metrics, separated per days,
-     * directly from google ads to google sheets.
+     * This method allows the user to send client account metrics, separated per days, directly from google ads to google sheets.
      *
      * <p>
-     * Here the user can pass a adwords customer id, a start date, end date,
-     * a spreadsheet id and tab, to send metrics per day directly without needing
-     * to download a csv.
+     * Here the user can pass a adwords customer id, a start date, end date, a spreadsheet id and tab, to send metrics
+     * per day directly without needing to download a csv.
      * <p/>
      *
      * @param spreadsheetId The google sheets id.

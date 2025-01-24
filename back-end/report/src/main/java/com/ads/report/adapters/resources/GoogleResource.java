@@ -7,7 +7,6 @@ import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.application.usecases.JsonToCsvUseCase;
 import com.ads.report.domain.ManagerAccountInfo;
 import com.ads.report.domain.AccountMetrics;
-import com.ads.report.domain.TotalPerDay;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,7 +32,7 @@ import java.util.Map;
  * @since 2025
  * */
 @RestController
-@RequestMapping("api/reports")
+@RequestMapping("v1/reports")
 public class GoogleResource {
 
     @Autowired
@@ -46,55 +45,6 @@ public class GoogleResource {
     private Gson gson;
     @Autowired
     private JsonToCsvUseCase jsonToCsv;
-
-    /**
-     * Endpoint to get All campaigns metrics.
-     *
-     * <p>
-     * This method uses an algorithm and the CSVWriter library
-     * to convert the JSON to CSV type.
-     * <p/>
-     *
-     * @param customerId The id of an adwords customer (client).
-     * @param response The response object.
-     */
-    @GetMapping("/campaign/{customerId}")
-    public void getAllCampaignMetrics(
-            @PathVariable String customerId,
-            @PathParam("start_date") String start_date,
-            @PathParam("end_date") String endDate,
-            @PathParam("active") boolean active,
-            HttpServletResponse response) {
-        String json = gson.toJson(googleAdsUseCase.getCampaignMetrics(customerId, start_date, endDate, active));
-        String fileName = "campaigns-"+customerId+".csv";
-        List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; filename=" + '"' + fileName + '"');
-        jsonToCsv.convert(records, response);
-    }
-
-    /**
-     * Endpoint to get aggregated metrics from one client account.
-     *
-     * @param customerId The id of an adwords customer (client).
-     * @param start_date The start date of the analysis period.
-     * @param end_date The end date of the analysis period.
-     */
-    @GetMapping("/account/metrics/{customerId}")
-    public void getAccountMetrics(
-            @PathVariable("customerId") String customerId,
-            @PathParam("start_date") String start_date,
-            @PathParam("end_date") String end_date,
-            @PathParam("type") String type,
-            HttpServletResponse response) {
-        List<AccountMetrics> accountMetrics = googleAdsUseCase.getAccountMetrics(customerId, start_date, end_date);
-        String json = gson.toJson(accountMetrics);
-        String fileName = "account-metrics-"+accountMetrics.getFirst().getDescriptiveName()+"-"+start_date+"-"+end_date+".csv";
-        List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; filename=" + '"' + fileName + '"');
-        jsonToCsv.convert(records, response);
-    }
 
     /**
      * Test the connection between the application and the google account.
@@ -115,6 +65,55 @@ public class GoogleResource {
     @GetMapping("/manager/{id}")
     public ResponseEntity<ManagerAccountInfo> getManagerAccount(@PathVariable("id") String id) {
         return ResponseEntity.ok(googleAdsUseCase.getManagerAccount(id));
+    }
+
+    /**
+     * Endpoint to get All campaigns metrics.
+     *
+     * <p>
+     * This method uses an algorithm and the CSVWriter library
+     * to convert the JSON to CSV type.
+     * <p/>
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param response The response object.
+     */
+    @GetMapping("/csv/campaign/{customerId}")
+    public void getAllCampaignMetrics(
+            @PathVariable String customerId,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date,
+            @PathParam("active") boolean active,
+            HttpServletResponse response) {
+        String json = gson.toJson(googleAdsUseCase.getCampaignMetrics(customerId, start_date, end_date, active));
+        String fileName = "campaigns-"+customerId+".csv";
+        List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=" + '"' + fileName + '"');
+        jsonToCsv.convert(records, response);
+    }
+
+    /**
+     * Endpoint to get aggregated metrics from one client account.
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param start_date The start date of the analysis period.
+     * @param end_date The end date of the analysis period.
+     */
+    @GetMapping("/csv/account/{customerId}")
+    public void getAccountMetrics(
+            @PathVariable("customerId") String customerId,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date,
+            @PathParam("type") String type,
+            HttpServletResponse response) {
+        List<AccountMetrics> accountMetrics = googleAdsUseCase.getAccountMetrics(customerId, start_date, end_date);
+        String json = gson.toJson(accountMetrics);
+        String fileName = "account-metrics-"+accountMetrics.getFirst().getDescriptiveName()+"-"+start_date+"-"+end_date+".csv";
+        List<Map<String, Object>> records = gson.fromJson(json, new TypeToken<List<Map<String, Object>>>() {}.getType());
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=" + '"' + fileName + '"');
+        jsonToCsv.convert(records, response);
     }
 
     /**
@@ -194,7 +193,7 @@ public class GoogleResource {
      * @param tab The sheets tab to write.
      * @return Returns a response entity ok if successful.
      */
-    @GetMapping("/sheets/total/days/{customer_id}")
+    @GetMapping("/sheets/campaign/days/{customer_id}")
     public ResponseEntity<String> getTotalPerDay(
             @PathVariable("customer_id") String customer_id,
             @PathParam("start_date") String start_date,
