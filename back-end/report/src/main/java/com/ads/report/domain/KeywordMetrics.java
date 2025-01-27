@@ -1,6 +1,19 @@
 package com.ads.report.domain;
 
-public class KeywordMetrics {
+import java.io.Serial;
+import java.io.Serializable;
+
+/**
+ * The domain of the keywords api call.
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
+public class KeywordMetrics implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String date;
     private String campaignName;

@@ -87,6 +87,14 @@ public class GoogleSheetsUseCase {
         googleSheetsGateway.totalPerDayToSheets(spreadsheetId, tab, totalPerDays);
     }
 
+    /**
+     * This method allows the user to send keyword metrics to sheets.
+     *
+     * @param spreadsheetId The google sheets id.
+     * @param tab The sheets tab to write.
+     * @param keywordMetrics the list of TotalPerDay objects.
+     * @throws IOException throws IOException if fails.
+     */
     public void sendKeywordMetrics(String spreadsheetId, String tab, List<KeywordMetrics> keywordMetrics) throws IOException {
         googleSheetsGateway.sendKeywordMetrics(spreadsheetId, tab, keywordMetrics);
     }

@@ -1,6 +1,6 @@
 package com.ads.report.adapters.mappers;
 
-import com.ads.report.adapters.output.google.TestResponseDto;
+import com.ads.report.adapters.output.TestResponseDto;
 
 import java.util.List;
 

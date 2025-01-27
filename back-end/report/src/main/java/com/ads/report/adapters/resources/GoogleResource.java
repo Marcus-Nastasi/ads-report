@@ -1,7 +1,7 @@
 package com.ads.report.adapters.resources;
 
 import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
-import com.ads.report.adapters.output.google.TestResponseDto;
+import com.ads.report.adapters.output.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.application.usecases.JsonToCsvUseCase;
@@ -229,7 +229,7 @@ public class GoogleResource {
     }
 
     /**
-     * This method allows the user to get all the keyword metrics from an account, filtering by period.
+     * This method allows the user to send all the keyword metrics from an account, filtering by period.
      *
      * @param customerId The id of an adwords customer (client).
      * @param start_date The start date of the analysis period.
@@ -240,7 +240,7 @@ public class GoogleResource {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Send all keyword metrics to sheets", description = "In this route you can send all keyword metrics in a certain period.")
     @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
-    public ResponseEntity<String> getKeywordMetrics(
+    public ResponseEntity<String> sendKeywordMetrics(
             @PathVariable("customerId") String customerId,
             @PathParam("start_date") String start_date,
             @PathParam("end_date") String end_date,

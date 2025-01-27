@@ -59,6 +59,13 @@ public interface GoogleSheetsGateway {
      */
     void totalPerDayToSheets(String spreadsheetId, String tab, List<TotalPerDay> totalPerDays) throws IOException;
 
-
+    /**
+     * This method allows the user to send keyword metrics to sheets.
+     *
+     * @param spreadsheetId The google sheets id.
+     * @param tab The sheets tab to write.
+     * @param keywordMetrics the list of TotalPerDay objects.
+     * @throws IOException throws IOException if fails.
+     */
     void sendKeywordMetrics(String spreadsheetId, String tab, List<KeywordMetrics> keywordMetrics) throws IOException;
 }

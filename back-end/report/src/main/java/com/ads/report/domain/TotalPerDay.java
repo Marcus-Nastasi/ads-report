@@ -1,6 +1,19 @@
 package com.ads.report.domain;
 
-public class TotalPerDay {
+import java.io.Serial;
+import java.io.Serializable;
+
+/**
+ * The domain of the object that represents the account metrics, granulated by days, based on a period.
+ *
+ * @author Marcus Nastasi
+ * @version 1.0.1
+ * @since 2025
+ * */
+public class TotalPerDay implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String date;
     private long impressions;

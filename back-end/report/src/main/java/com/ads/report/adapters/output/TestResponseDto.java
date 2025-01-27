@@ -1,4 +1,4 @@
-package com.ads.report.adapters.output.google;
+package com.ads.report.adapters.output;
 
 import java.io.Serializable;
 import java.util.List;
