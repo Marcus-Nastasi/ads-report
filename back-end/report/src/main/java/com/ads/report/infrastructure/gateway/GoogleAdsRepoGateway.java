@@ -108,6 +108,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
     }
 
     /**
+     *
      * Get campaigns and it's metrics.
      *
      * @param customerId The id of an adwords customer (client).
@@ -123,8 +124,11 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             List<CampaignMetrics> campaignMetricsList = new ArrayList<>();
             String query = String.format("""
                 SELECT
+                    segments.date,
+                    segments.day_of_week,
                     campaign.id,
                     campaign.name,
+                    ad_group.name,
                     campaign.status,
                     metrics.impressions,
                     metrics.clicks,
@@ -133,10 +137,10 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                     metrics.ctr,
                     metrics.average_cpc,
                     metrics.cost_per_conversion
-                FROM campaign
+                FROM ad_group
                 WHERE %s
                 AND segments.date BETWEEN '%s' AND '%s'
-                ORDER BY metrics.conversions DESC
+                ORDER BY segments.date ASC, metrics.conversions DESC
             """, isActive, startDate, endDate);
             // Build a new request with the customerId and query
             SearchGoogleAdsRequest request = SearchGoogleAdsRequest.newBuilder()
@@ -146,8 +150,11 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
             // Iterating GoogleAdsRow objects to convert to CampaignMetrics
             for (GoogleAdsRow r: client.search(request).iterateAll()) {
                 CampaignMetrics campaignMetrics = new CampaignMetrics(
+                    r.getSegments().getDate(),
+                    r.getSegments().getDayOfWeek().name(),
                     r.getCampaign().getId(),
                     r.getCampaign().getName(),
+                    r.getAdGroup().getName(),
                     r.getCampaign().getStatus().toString(),
                     r.getMetrics().getImpressions(),
                     r.getMetrics().getClicks(),

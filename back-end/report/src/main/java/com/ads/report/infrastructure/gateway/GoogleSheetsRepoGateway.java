@@ -101,12 +101,15 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
         clearSheetTab(spreadsheetId, tab);
         List<List<Object>> sheetData = new ArrayList<>();
         // added sheets headers.
-        sheetData.add(List.of("campaignId", "campaignName", "status", "impressions", "clicks", "cost", "conversions", "averageCpa", "ctr", "averageCpc"));
+        sheetData.add(List.of("date", "dayOfWeek", "campaignId", "campaignName", "adGroupName", "status", "impressions", "clicks", "cost", "conversions", "averageCpa", "ctr", "averageCpc"));
         // iterates in all campaign metrics objects, and add as a row on sheetData list.
         for (CampaignMetrics obj : campaignMetrics) {
             List<Object> row = List.of(
+                obj.getDate(),
+                obj.getDayOfWeek(),
                 obj.getCampaignId(),
                 obj.getCampaignName(),
+                obj.getAdGroupName(),
                 obj.getStatus(),
                 obj.getImpressions(),
                 obj.getClicks(),

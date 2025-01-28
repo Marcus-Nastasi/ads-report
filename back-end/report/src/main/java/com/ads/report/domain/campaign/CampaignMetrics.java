@@ -15,8 +15,11 @@ public class CampaignMetrics implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private String date;
+    private String dayOfWeek;
     private Long campaignId;
     private String campaignName;
+    private String adGroupName;
     private String status;
     private Long impressions;
     private Long clicks;
@@ -26,10 +29,12 @@ public class CampaignMetrics implements Serializable {
     private Double averageCpc;
     private Double averageCpa;
 
-
-    public CampaignMetrics(Long campaignId, String campaignName, String status, Long impressions, Long clicks, Double cost, Double conversions, Double ctr, Double averageCpc, Double averageCpa) {
+    public CampaignMetrics(String date, String dayOfWeek, Long campaignId, String campaignName, String adGroupName, String status, Long impressions, Long clicks, Double cost, Double conversions, Double ctr, Double averageCpc, Double averageCpa) {
+        this.date = date;
+        this.dayOfWeek = dayOfWeek;
         this.campaignId = campaignId;
         this.campaignName = campaignName;
+        this.adGroupName = adGroupName;
         this.status = status;
         this.impressions = impressions;
         this.clicks = clicks;
@@ -38,6 +43,22 @@ public class CampaignMetrics implements Serializable {
         this.ctr = ctr;
         this.averageCpc = averageCpc;
         this.averageCpa = averageCpa;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public Long getCampaignId() {
@@ -54,6 +75,14 @@ public class CampaignMetrics implements Serializable {
 
     public void setCampaignName(String campaignName) {
         this.campaignName = campaignName;
+    }
+
+    public String getAdGroupName() {
+        return adGroupName;
+    }
+
+    public void setAdGroupName(String adGroupName) {
+        this.adGroupName = adGroupName;
     }
 
     public String getStatus() {
