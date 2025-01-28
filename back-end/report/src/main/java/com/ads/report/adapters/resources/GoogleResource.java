@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +94,10 @@ public class GoogleResource {
      */
     @GetMapping("/csv/campaign/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get all campaign metrics (CSV)", description = "In this route you can get all metrics separated by campaigns, in a certain period.")
+    @Operation(
+        summary = "Get all campaign metrics (CSV)",
+        description = "In this route you can get all metrics separated by campaigns, in a certain period."
+    )
     @ApiResponse(responseCode = "200", description = "Returning the CSV with campaign metrics.")
     public void getAllCampaignMetrics(
             @PathVariable String customerId,
@@ -120,7 +122,10 @@ public class GoogleResource {
      */
     @GetMapping("/csv/account/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get all account metrics (CSV)", description = "In this route you can get all metrics of an account, in a certain period.")
+    @Operation(
+        summary = "Get all account metrics (CSV)",
+        description = "In this route you can get all metrics of an account, in a certain period."
+    )
     @ApiResponse(responseCode = "200", description = "Returning the CSV with account metrics.")
     public void getAccountMetrics(
             @PathVariable("customerId") String customerId,
@@ -152,7 +157,10 @@ public class GoogleResource {
      */
     @GetMapping("/sheets/campaign/{customer_id}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Send all campaign metrics to sheets", description = "In this route you can send all metrics of a account separated by campaigns, in a certain period.")
+    @Operation(
+        summary = "Send all campaign metrics to sheets",
+        description = "In this route you can send all metrics of a account separated by campaigns, in a certain period."
+    )
     @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> campaignMetricsToSheets(
             @PathVariable("customer_id") String customer_id,
@@ -160,12 +168,8 @@ public class GoogleResource {
             @PathParam("end_date") String end_date,
             @PathParam("spreadsheet_id") String spreadsheet_id,
             @PathParam("tab") String tab,
-            @PathParam("active") boolean active) {
-        try {
-            googleSheetsUseCase.campaignMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getCampaignMetrics(customer_id, start_date, end_date, active));
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to send data to sheets.");
-        }
+            @PathParam("active") boolean active) throws IOException {
+        googleSheetsUseCase.campaignMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getCampaignMetrics(customer_id, start_date, end_date, active));
         return ResponseEntity.ok("");
     }
 
@@ -187,20 +191,19 @@ public class GoogleResource {
      */
     @GetMapping("/sheets/account/{customer_id}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Send all account metrics to sheets", description = "In this route you can send all metrics of a account, in a certain period.")
+    @Operation(
+        summary = "Send all account metrics to sheets",
+        description = "In this route you can send all metrics of a account, in a certain period."
+    )
     @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> accountMetricsToSheet(
             @PathVariable("customer_id") String customer_id,
             @PathParam("start_date") String start_date,
             @PathParam("end_date") String end_date,
             @PathParam("spreadsheet_id") String spreadsheet_id,
-            @PathParam("tab") String tab) {
-        try {
-            googleSheetsUseCase.accountMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getAccountMetrics(customer_id, start_date, end_date));
-            return ResponseEntity.ok("");
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to send data to sheets.");
-        }
+            @PathParam("tab") String tab) throws IOException {
+        googleSheetsUseCase.accountMetricsToSheets(spreadsheet_id, tab, googleAdsUseCase.getAccountMetrics(customer_id, start_date, end_date));
+        return ResponseEntity.ok("");
     }
 
     /**
@@ -222,7 +225,10 @@ public class GoogleResource {
      */
     @GetMapping("/sheets/campaign/days/{customer_id}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Send all campaign metrics to sheets, separated by days", description = "In this route you can send all metrics of a campaign, separated by campaigns and days, in a certain period.")
+    @Operation(
+        summary = "Send all campaign metrics to sheets, separated by days",
+        description = "In this route you can send all metrics of a campaign, separated by campaigns and days, in a certain period."
+    )
     @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> getTotalPerDay(
             @PathVariable("customer_id") String customer_id,
@@ -244,7 +250,10 @@ public class GoogleResource {
      */
     @GetMapping("/sheets/keywords/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Send all keyword metrics to sheets", description = "In this route you can send all keyword metrics in a certain period.")
+    @Operation(
+        summary = "Send all keyword metrics to sheets",
+        description = "In this route you can send all keyword metrics in a certain period."
+    )
     @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> sendKeywordMetrics(
             @PathVariable("customerId") String customerId,
@@ -267,7 +276,10 @@ public class GoogleResource {
      */
     @GetMapping("/sheets/headlines/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Send all title and descriptions, and its metrics to sheets", description = "In this route you can send all title, descriptions and its metrics, in a certain period.")
+    @Operation(
+        summary = "Send all title and descriptions, and its metrics to sheets",
+        description = "In this route you can send all title, descriptions and its metrics, in a certain period."
+    )
     @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> sendAdTitle(
             @PathVariable("customerId") String customerId,
@@ -293,6 +305,13 @@ public class GoogleResource {
      * @throws IOException throws exception if fails
      */
     @PostMapping("/generate")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+        summary = "Generate various reports",
+        description = "In this route you can send all client metrics with one request, " +
+            "by passing the data from all the clients you want to on the request body."
+    )
+    @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
     public ResponseEntity<String> generateAllReports(
             @RequestBody @Valid UpdateAllReportsRequestDto allReportsRequestDto) throws IOException {
         updateAllReportsUseCase.updateReports(allReportsRequestDto.data());
