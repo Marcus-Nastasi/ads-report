@@ -7,6 +7,7 @@ import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.campaign.CampaignTitleAndDescription;
 import com.ads.report.domain.campaign.CampaignTotalPerDay;
 import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.ClearValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,6 +28,19 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
     private Sheets sheetsClient;
 
     /**
+     * This method clenas the spreadsheet.
+     *
+     * @param spreadsheetId The google sheets id.
+     * @param tab The sheets tab to clear.
+     * @throws IOException throws IOException if fails.
+     */
+    @Override
+    public void clearSheetTab(String spreadsheetId, String tab) throws IOException {
+        String range = tab + "!A:Z";
+        sheetsClient.spreadsheets().values().clear(spreadsheetId, range, new ClearValuesRequest()).execute();
+    }
+
+    /**
      * This method allows the user to send account metrics directly from google ads to google sheets.
      *
      * <p>
@@ -42,6 +56,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
      */
     @Override
     public void accountMetricsToSheets(String spreadsheetId, String tab, List<AccountMetrics> accountMetrics) throws IOException {
+        clearSheetTab(spreadsheetId, tab);
         List<List<Object>> sheetData = new ArrayList<>();
         // added sheets headers.
         sheetData.add(List.of("customerId", "descriptiveName", "impressions", "clicks", "cost", "conversions", "averageCpa", "ctr",	"averageCpc"));
@@ -83,6 +98,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
      */
     @Override
     public void campaignMetricsToSheets(String spreadsheetId, String tab, List<CampaignMetrics> campaignMetrics) throws IOException {
+        clearSheetTab(spreadsheetId, tab);
         List<List<Object>> sheetData = new ArrayList<>();
         // added sheets headers.
         sheetData.add(List.of("campaignId", "campaignName", "status", "impressions", "clicks", "cost", "conversions", "averageCpa", "ctr", "averageCpc"));
@@ -125,6 +141,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
      */
     @Override
     public void totalPerDayToSheets(String spreadsheetId, String tab, List<CampaignTotalPerDay> campaignTotalPerDays) throws IOException {
+        clearSheetTab(spreadsheetId, tab);
         List<List<Object>> sheetData = new ArrayList<>();
         sheetData.add(List.of("date", "impressions", "clicks", "conversions", "cost", "hour", "dayOfWeek"));
         for (CampaignTotalPerDay obj : campaignTotalPerDays) {
@@ -157,6 +174,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
      */
     @Override
     public void sendKeywordMetrics(String spreadsheetId, String tab, List<CampaignKeywordMetrics> campaignKeywordMetrics) throws IOException {
+        clearSheetTab(spreadsheetId, tab);
         List<List<Object>> sheetData = new ArrayList<>();
         sheetData.add(List
             .of("date", "campaignName", "adGroupName", "keywordText", "matchType", "impressions", "clicks", "cost", "averageCpc", "conversions", "conversionRate", "dayOfWeek"));
@@ -195,6 +213,7 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
      */
     @Override
     public void sendAdTitleAndDescription(String spreadsheetId, String tab, List<CampaignTitleAndDescription> campaignTitleAndDescriptions) throws IOException {
+        clearSheetTab(spreadsheetId, tab);
         List<List<Object>> sheetData = new ArrayList<>();
         sheetData.add(List.of("date", "campaignName", "adGroupName", "responsiveHeadlines", "responsiveDescriptions", "clicks", "impressions", "conversions"));
         for (CampaignTitleAndDescription obj : campaignTitleAndDescriptions) {

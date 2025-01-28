@@ -1,10 +1,12 @@
 package com.ads.report.adapters.resources;
 
+import com.ads.report.adapters.input.UpdateAllReportsRequestDto;
 import com.ads.report.adapters.mappers.GoogleAdsDtoMapper;
 import com.ads.report.adapters.output.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.application.usecases.JsonToCsvUseCase;
+import com.ads.report.application.usecases.UpdateAllReportsUseCase;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.ads.report.domain.account.AccountMetrics;
 import com.google.common.reflect.TypeToken;
@@ -12,6 +14,7 @@ import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +48,8 @@ public class GoogleResource {
     private GoogleAdsDtoMapper googleAdsDtoMapper;
     @Autowired
     private GoogleSheetsUseCase googleSheetsUseCase;
+    @Autowired
+    private UpdateAllReportsUseCase updateAllReportsUseCase;
     @Autowired
     private Gson gson;
     @Autowired
@@ -270,6 +276,26 @@ public class GoogleResource {
             @PathParam("spreadsheet_id") String spreadsheet_id,
             @PathParam("tab") String tab) throws IOException {
         googleSheetsUseCase.sendAdTitleAndDescription(spreadsheet_id, tab, googleAdsUseCase.getAdTitleAndDescriptions(customerId, start_date, end_date));
+        return ResponseEntity.ok("");
+    }
+
+    /**
+     *
+     * This endpoint allows the user to send data to sheets, from various accounts.
+     *
+     * <p>
+     * By passing the customer id, start date, end date, spreadsheet id, client and active flag,
+     * you can update the sheets tables with ease.
+     * <p/>
+     *
+     * @param allReportsRequestDto the list of UpdateAllReports domain object.
+     * @return ok if the cll is successful
+     * @throws IOException throws exception if fails
+     */
+    @PostMapping("/generate")
+    public ResponseEntity<String> generateAllReports(
+            @RequestBody @Valid UpdateAllReportsRequestDto allReportsRequestDto) throws IOException {
+        updateAllReportsUseCase.updateReports(allReportsRequestDto.data());
         return ResponseEntity.ok("");
     }
 }

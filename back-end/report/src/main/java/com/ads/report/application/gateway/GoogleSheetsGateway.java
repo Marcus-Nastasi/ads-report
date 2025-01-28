@@ -79,4 +79,13 @@ public interface GoogleSheetsGateway {
      * @throws IOException throws IOException if fails.
      */
     void sendAdTitleAndDescription(String spreadsheetId, String tab, List<CampaignTitleAndDescription> campaignTitleAndDescriptions) throws IOException;
+
+    /**
+     * This method clenas the spreadsheet.
+     *
+     * @param spreadsheetId The google sheets id.
+     * @param tab The sheets tab to clear.
+     * @throws IOException throws IOException if fails.
+     */
+    void clearSheetTab(String spreadsheetId, String tab) throws IOException;
 }
