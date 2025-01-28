@@ -1,9 +1,10 @@
 package com.ads.report.application.gateway;
 
-import com.ads.report.domain.AccountMetrics;
-import com.ads.report.domain.CampaignMetrics;
-import com.ads.report.domain.KeywordMetrics;
-import com.ads.report.domain.TotalPerDay;
+import com.ads.report.domain.account.AccountMetrics;
+import com.ads.report.domain.campaign.CampaignKeywordMetrics;
+import com.ads.report.domain.campaign.CampaignMetrics;
+import com.ads.report.domain.campaign.CampaignTitleAndDescription;
+import com.ads.report.domain.campaign.CampaignTotalPerDay;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,18 +55,28 @@ public interface GoogleSheetsGateway {
      *
      * @param spreadsheetId The google sheets id.
      * @param tab The sheets tab to write.
-     * @param totalPerDays the list of TotalPerDay objects.
+     * @param campaignTotalPerDays the list of TotalPerDay objects.
      * @throws IOException throws IOException if fails.
      */
-    void totalPerDayToSheets(String spreadsheetId, String tab, List<TotalPerDay> totalPerDays) throws IOException;
+    void totalPerDayToSheets(String spreadsheetId, String tab, List<CampaignTotalPerDay> campaignTotalPerDays) throws IOException;
 
     /**
      * This method allows the user to send keyword metrics to sheets.
      *
      * @param spreadsheetId The google sheets id.
      * @param tab The sheets tab to write.
-     * @param keywordMetrics the list of TotalPerDay objects.
+     * @param campaignKeywordMetrics the list of KeywordMetrics objects.
      * @throws IOException throws IOException if fails.
      */
-    void sendKeywordMetrics(String spreadsheetId, String tab, List<KeywordMetrics> keywordMetrics) throws IOException;
+    void sendKeywordMetrics(String spreadsheetId, String tab, List<CampaignKeywordMetrics> campaignKeywordMetrics) throws IOException;
+
+    /**
+     * This method allows the user to send titles and descriptions to sheets.
+     *
+     * @param spreadsheetId The google sheets id.
+     * @param tab The sheets tab to write.
+     * @param campaignTitleAndDescriptions the list of AdTitleAndDescriptionInfo objects.
+     * @throws IOException throws IOException if fails.
+     */
+    void sendAdTitleAndDescription(String spreadsheetId, String tab, List<CampaignTitleAndDescription> campaignTitleAndDescriptions) throws IOException;
 }

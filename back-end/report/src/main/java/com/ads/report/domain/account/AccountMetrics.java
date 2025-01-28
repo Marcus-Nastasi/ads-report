@@ -1,4 +1,4 @@
-package com.ads.report.domain;
+package com.ads.report.domain.account;
 
 import java.io.Serial;
 import java.io.Serializable;

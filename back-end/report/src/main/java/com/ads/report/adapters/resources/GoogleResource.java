@@ -5,8 +5,8 @@ import com.ads.report.adapters.output.TestResponseDto;
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.application.usecases.GoogleSheetsUseCase;
 import com.ads.report.application.usecases.JsonToCsvUseCase;
-import com.ads.report.domain.ManagerAccountInfo;
-import com.ads.report.domain.AccountMetrics;
+import com.ads.report.domain.manager.ManagerAccountInfo;
+import com.ads.report.domain.account.AccountMetrics;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Operation;
@@ -248,6 +248,28 @@ public class GoogleResource {
             @PathParam("tab") String tab,
             @PathParam("active") boolean active) throws IOException {
         googleSheetsUseCase.sendKeywordMetrics(spreadsheet_id, tab, googleAdsUseCase.getKeywordMetrics(customerId, start_date, end_date, active));
+        return ResponseEntity.ok("");
+    }
+
+    /**
+     * This method allows the user to send all the title and description metrics from an account, filtering by period.
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param start_date The start date of the analysis period.
+     * @param end_date The end date of the analysis period.
+     * @return Returns a response entity ok if successful.
+     */
+    @GetMapping("/sheets/headlines/{customerId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Send all title and descriptions, and its metrics to sheets", description = "In this route you can send all title, descriptions and its metrics, in a certain period.")
+    @ApiResponse(responseCode = "200", description = "Returning 200 and sending to sheets.")
+    public ResponseEntity<String> sendAdTitle(
+            @PathVariable("customerId") String customerId,
+            @PathParam("start_date") String start_date,
+            @PathParam("end_date") String end_date,
+            @PathParam("spreadsheet_id") String spreadsheet_id,
+            @PathParam("tab") String tab) throws IOException {
+        googleSheetsUseCase.sendAdTitleAndDescription(spreadsheet_id, tab, googleAdsUseCase.getAdTitleAndDescriptions(customerId, start_date, end_date));
         return ResponseEntity.ok("");
     }
 }

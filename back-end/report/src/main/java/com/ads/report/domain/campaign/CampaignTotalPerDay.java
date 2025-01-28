@@ -1,4 +1,4 @@
-package com.ads.report.domain;
+package com.ads.report.domain.campaign;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @version 1.0.1
  * @since 2025
  * */
-public class TotalPerDay implements Serializable {
+public class CampaignTotalPerDay implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,7 +27,7 @@ public class TotalPerDay implements Serializable {
     private int hour;
     private String dayOfWeek;
 
-    public TotalPerDay(String date, long impressions, long clicks, double conversions, double cost, String campaignName, String adName, String researchKeyword, String keyword, int hour, String dayOfWeek) {
+    public CampaignTotalPerDay(String date, long impressions, long clicks, double conversions, double cost, String campaignName, String adName, String researchKeyword, String keyword, int hour, String dayOfWeek) {
         this.date = date;
         this.impressions = impressions;
         this.clicks = clicks;

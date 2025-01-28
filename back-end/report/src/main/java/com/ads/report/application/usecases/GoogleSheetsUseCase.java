@@ -1,10 +1,11 @@
 package com.ads.report.application.usecases;
 
 import com.ads.report.application.gateway.GoogleSheetsGateway;
-import com.ads.report.domain.AccountMetrics;
-import com.ads.report.domain.CampaignMetrics;
-import com.ads.report.domain.KeywordMetrics;
-import com.ads.report.domain.TotalPerDay;
+import com.ads.report.domain.account.AccountMetrics;
+import com.ads.report.domain.campaign.CampaignKeywordMetrics;
+import com.ads.report.domain.campaign.CampaignMetrics;
+import com.ads.report.domain.campaign.CampaignTitleAndDescription;
+import com.ads.report.domain.campaign.CampaignTotalPerDay;
 
 import java.io.IOException;
 import java.util.List;
@@ -80,11 +81,11 @@ public class GoogleSheetsUseCase {
      *
      * @param spreadsheetId The google sheets id.
      * @param tab The sheets tab to write.
-     * @param totalPerDays the list of TotalPerDay objects.
+     * @param campaignTotalPerDays the list of TotalPerDay objects.
      * @throws IOException throws IOException if fails.
      */
-    public void totalPerDaysToSheet(String spreadsheetId, String tab, List<TotalPerDay> totalPerDays) throws IOException {
-        googleSheetsGateway.totalPerDayToSheets(spreadsheetId, tab, totalPerDays);
+    public void totalPerDaysToSheet(String spreadsheetId, String tab, List<CampaignTotalPerDay> campaignTotalPerDays) throws IOException {
+        googleSheetsGateway.totalPerDayToSheets(spreadsheetId, tab, campaignTotalPerDays);
     }
 
     /**
@@ -92,10 +93,25 @@ public class GoogleSheetsUseCase {
      *
      * @param spreadsheetId The google sheets id.
      * @param tab The sheets tab to write.
-     * @param keywordMetrics the list of TotalPerDay objects.
+     * @param campaignKeywordMetrics the list of TotalPerDay objects.
      * @throws IOException throws IOException if fails.
      */
-    public void sendKeywordMetrics(String spreadsheetId, String tab, List<KeywordMetrics> keywordMetrics) throws IOException {
-        googleSheetsGateway.sendKeywordMetrics(spreadsheetId, tab, keywordMetrics);
+    public void sendKeywordMetrics(String spreadsheetId, String tab, List<CampaignKeywordMetrics> campaignKeywordMetrics) throws IOException {
+//        final double[] conversions = { 0.0 };
+//        final double[] clicks = { 0.0 };
+//        keywordMetrics.forEach(k -> k.setConversionRate(k.getConversions() / k.getClicks() * 100));
+        googleSheetsGateway.sendKeywordMetrics(spreadsheetId, tab, campaignKeywordMetrics);
+    }
+
+    /**
+     * This method allows the user to send titles and descriptions to sheets.
+     *
+     * @param spreadsheetId The google sheets id.
+     * @param tab The sheets tab to write.
+     * @param campaignTitleAndDescriptions the list of AdTitleAndDescriptionInfo objects.
+     * @throws IOException throws IOException if fails.
+     */
+    public void sendAdTitleAndDescription(String spreadsheetId, String tab, List<CampaignTitleAndDescription> campaignTitleAndDescriptions) throws IOException {
+        googleSheetsGateway.sendAdTitleAndDescription(spreadsheetId, tab, campaignTitleAndDescriptions);
     }
 }

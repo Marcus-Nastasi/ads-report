@@ -1,4 +1,4 @@
-package com.ads.report.domain;
+package com.ads.report.domain.campaign;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,12 +10,13 @@ import java.io.Serializable;
  * @version 1.0.1
  * @since 2025
  * */
-public class KeywordMetrics implements Serializable {
+public class CampaignKeywordMetrics implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private String date;
+    private String dayOfWeek;
     private String campaignName;
     private String adGroupName;
     private String keywordText;
@@ -25,10 +26,11 @@ public class KeywordMetrics implements Serializable {
     private double cost;
     private double averageCpc;
     private double conversions;
-    private String conversionRate;
+    private double conversionRate;
 
-    public KeywordMetrics(String date, String campaignName, String adGroupName, String keywordText, String matchType, Long impressions, Long clicks, double cost, double averageCpc, double conversions, String conversionRate) {
+    public CampaignKeywordMetrics(String date, String dayOfWeek, String campaignName, String adGroupName, String keywordText, String matchType, Long impressions, Long clicks, double cost, double averageCpc, double conversions, double conversionRate) {
         this.date = date;
+        this.dayOfWeek = dayOfWeek;
         this.campaignName = campaignName;
         this.adGroupName = adGroupName;
         this.keywordText = keywordText;
@@ -47,6 +49,14 @@ public class KeywordMetrics implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public String getCampaignName() {
@@ -121,11 +131,11 @@ public class KeywordMetrics implements Serializable {
         this.conversions = conversions;
     }
 
-    public String getConversionRate() {
+    public double getConversionRate() {
         return conversionRate;
     }
 
-    public void setConversionRate(String conversionRate) {
+    public void setConversionRate(double conversionRate) {
         this.conversionRate = conversionRate;
     }
 }

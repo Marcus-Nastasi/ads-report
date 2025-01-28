@@ -1,7 +1,12 @@
 package com.ads.report.application.usecases;
 
 import com.ads.report.application.gateway.GoogleAdsGateway;
-import com.ads.report.domain.*;
+import com.ads.report.domain.account.AccountMetrics;
+import com.ads.report.domain.campaign.CampaignKeywordMetrics;
+import com.ads.report.domain.campaign.CampaignMetrics;
+import com.ads.report.domain.campaign.CampaignTitleAndDescription;
+import com.ads.report.domain.campaign.CampaignTotalPerDay;
+import com.ads.report.domain.manager.ManagerAccountInfo;
 
 import java.util.List;
 
@@ -86,7 +91,7 @@ public class GoogleAdsUseCase {
      * @param endDate The end date of the analysis period.
      * @return Returns a list of TotalPerDay object.
      */
-    public List<TotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
+    public List<CampaignTotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
         return googleAdsGateway.getTotalPerDay(customerId, startDate, endDate);
     }
 
@@ -98,7 +103,19 @@ public class GoogleAdsUseCase {
      * @param endDate The end date of the analysis period.
      * @return A list of KeywordMetrics object.
      */
-    public List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate, boolean active) {
+    public List<CampaignKeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate, boolean active) {
         return googleAdsGateway.getKeywordMetrics(customerId, startDate, endDate, active);
+    }
+
+    /**
+     * This method allows to get all campaigns, ad groups, titles, descriptions, and its metrics.
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param startDate The start date of the analysis period.
+     * @param endDate The end date of the analysis period.
+     * @return A list of AdTitleAndDescriptionInfo object.
+     */
+    public List<CampaignTitleAndDescription> getAdTitleAndDescriptions(String customerId, String startDate, String endDate) {
+        return googleAdsGateway.getAdTitleAndDescriptions(customerId, startDate, endDate);
     }
 }

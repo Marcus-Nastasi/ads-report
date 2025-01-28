@@ -1,6 +1,11 @@
 package com.ads.report.application.gateway;
 
-import com.ads.report.domain.*;
+import com.ads.report.domain.account.AccountMetrics;
+import com.ads.report.domain.campaign.CampaignKeywordMetrics;
+import com.ads.report.domain.campaign.CampaignMetrics;
+import com.ads.report.domain.campaign.CampaignTitleAndDescription;
+import com.ads.report.domain.campaign.CampaignTotalPerDay;
+import com.ads.report.domain.manager.ManagerAccountInfo;
 
 import java.util.List;
 
@@ -67,7 +72,7 @@ public interface GoogleAdsGateway {
      * @param endDate The end date of the analysis period.
      * @return Returns a list of TotalPerDay object.
      */
-    List<TotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate);
+    List<CampaignTotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate);
 
     /**
      * This method allows to get all keyword metrics from an account.
@@ -78,5 +83,15 @@ public interface GoogleAdsGateway {
      * @param active Select if the keyword have had any impressions or cost.
      * @return A list of KeywordMetrics object.
      */
-    List<KeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate, boolean active);
+    List<CampaignKeywordMetrics> getKeywordMetrics(String customerId, String startDate, String endDate, boolean active);
+
+    /**
+     * This method allows to get all campaigns, ad groups, titles, descriptions, and its metrics.
+     *
+     * @param customerId The id of an adwords customer (client).
+     * @param startDate The start date of the analysis period.
+     * @param endDate The end date of the analysis period.
+     * @return A list of AdTitleAndDescriptionInfo object.
+     */
+    List<CampaignTitleAndDescription> getAdTitleAndDescriptions(String customerId, String startDate, String endDate);
 }
