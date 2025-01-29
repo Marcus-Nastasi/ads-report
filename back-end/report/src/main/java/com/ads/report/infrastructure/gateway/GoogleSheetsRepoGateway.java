@@ -152,8 +152,8 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
                 obj.getDate(),
                 obj.getImpressions(),
                 obj.getClicks(),
-                obj.getCost(),
                 obj.getConversions(),
+                obj.getCost(),
                 obj.getHour(),
                 obj.getDayOfWeek()
             );

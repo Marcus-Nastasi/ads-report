@@ -99,7 +99,8 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 row.getCustomer().getAutoTaggingEnabled(),
                 row.getCustomer().hasTrackingUrlTemplate() ? row.getCustomer().getTrackingUrlTemplate() : null,
                 row.getCustomer().hasFinalUrlSuffix() ? row.getCustomer().getFinalUrlSuffix() : null,
-                row.getCustomer().getConversionTrackingSetting().hasConversionTrackingId() ? row.getCustomer().getConversionTrackingSetting().getConversionTrackingId() : null,
+                row.getCustomer().getConversionTrackingSetting().hasConversionTrackingId()
+                    ? row.getCustomer().getConversionTrackingSetting().getConversionTrackingId() : null,
                 row.getCustomer().getConversionTrackingSetting().getConversionTrackingStatus().name()
             );
         } catch (Exception e) {
@@ -255,7 +256,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
               segments.day_of_week
             FROM customer
             WHERE segments.date BETWEEN '%s' AND '%s'
-            ORDER BY segments.date
+            ORDER BY segments.date ASC, metrics.conversions DESC
         """, startDate, endDate);
         try (GoogleAdsServiceClient client = googleAdsClient.getLatestVersion().createGoogleAdsServiceClient()) {
             // Build a new request with the customerId and query
@@ -271,10 +272,6 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                     r.getMetrics().getClicks(),
                     r.getMetrics().getConversions(),
                     r.getMetrics().getCostMicros() / 1_000_000.0,
-                    r.getCampaign().getName(),
-                    r.getAdGroup().getName(),
-                    r.getSegments().getKeyword().getInfo().getMatchType().name(),
-                    r.getSegments().getKeyword().getInfo().getText(),
                     r.getSegments().getHour(),
                     r.getSegments().getDayOfWeek().name()
                 );
@@ -396,10 +393,20 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 // Verifies ad type.
                 if (r.getAdGroupAd().getAd().hasResponsiveSearchAd()) {
                     // Process responsive ads.
-                    responsiveHeadlines = r.getAdGroupAd().getAd().getResponsiveSearchAd().getHeadlinesList().stream()
-                        .map(AdTextAsset::getText).toList();
-                    responsiveDescriptions = r.getAdGroupAd().getAd().getResponsiveSearchAd().getDescriptionsList().stream()
-                        .map(AdTextAsset::getText).toList();
+                    responsiveHeadlines = r.getAdGroupAd()
+                        .getAd()
+                        .getResponsiveSearchAd()
+                        .getHeadlinesList()
+                        .stream()
+                        .map(AdTextAsset::getText)
+                        .toList();
+                    responsiveDescriptions = r.getAdGroupAd()
+                        .getAd()
+                        .getResponsiveSearchAd()
+                        .getDescriptionsList()
+                        .stream()
+                        .map(AdTextAsset::getText)
+                        .toList();
                 }
                 // Build domain object.
                 CampaignTitleAndDescription adInfo = new CampaignTitleAndDescription(
