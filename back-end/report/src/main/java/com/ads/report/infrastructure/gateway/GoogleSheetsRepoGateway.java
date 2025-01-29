@@ -5,7 +5,7 @@ import com.ads.report.domain.account.AccountMetrics;
 import com.ads.report.domain.campaign.CampaignKeywordMetrics;
 import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.campaign.CampaignTitleAndDescription;
-import com.ads.report.domain.campaign.CampaignTotalPerDay;
+import com.ads.report.domain.campaign.CampaignPerDay;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ClearValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
@@ -139,15 +139,15 @@ public class GoogleSheetsRepoGateway implements GoogleSheetsGateway {
      *
      * @param spreadsheetId The google sheets id.
      * @param tab The sheets tab to write.
-     * @param campaignTotalPerDays the list of TotalPerDay objects.
+     * @param campaignPerDays the list of TotalPerDay objects.
      * @throws IOException throws IOException if fails.
      */
     @Override
-    public void totalPerDayToSheets(String spreadsheetId, String tab, List<CampaignTotalPerDay> campaignTotalPerDays) throws IOException {
+    public void totalPerDayToSheets(String spreadsheetId, String tab, List<CampaignPerDay> campaignPerDays) throws IOException {
         clearSheetTab(spreadsheetId, tab);
         List<List<Object>> sheetData = new ArrayList<>();
         sheetData.add(List.of("date", "impressions", "clicks", "conversions", "cost", "hour", "dayOfWeek"));
-        for (CampaignTotalPerDay obj : campaignTotalPerDays) {
+        for (CampaignPerDay obj : campaignPerDays) {
             List<Object> row = List.of(
                 obj.getDate(),
                 obj.getImpressions(),

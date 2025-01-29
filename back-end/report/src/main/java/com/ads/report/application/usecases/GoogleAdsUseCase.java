@@ -5,7 +5,7 @@ import com.ads.report.domain.account.AccountMetrics;
 import com.ads.report.domain.campaign.CampaignKeywordMetrics;
 import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.campaign.CampaignTitleAndDescription;
-import com.ads.report.domain.campaign.CampaignTotalPerDay;
+import com.ads.report.domain.campaign.CampaignPerDay;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 
 import java.util.List;
@@ -91,7 +91,7 @@ public class GoogleAdsUseCase {
      * @param endDate The end date of the analysis period.
      * @return Returns a list of TotalPerDay object.
      */
-    public List<CampaignTotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
+    public List<CampaignPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
         return googleAdsGateway.getTotalPerDay(customerId, startDate, endDate);
     }
 

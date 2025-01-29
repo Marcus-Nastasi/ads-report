@@ -1,4 +1,4 @@
-package com.ads.report.domain.account;
+package com.ads.report.domain.reports;
 
 /**
  * The domain of the object to update various reports.

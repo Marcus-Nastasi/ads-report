@@ -2,7 +2,7 @@ package com.ads.report.application.usecases;
 
 import com.ads.report.application.gateway.GoogleAdsGateway;
 import com.ads.report.application.gateway.GoogleSheetsGateway;
-import com.ads.report.domain.account.UpdateAllReports;
+import com.ads.report.domain.reports.UpdateAllReports;
 
 import java.io.IOException;
 import java.util.List;

@@ -5,7 +5,7 @@ import com.ads.report.domain.account.AccountMetrics;
 import com.ads.report.domain.campaign.CampaignKeywordMetrics;
 import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.campaign.CampaignTitleAndDescription;
-import com.ads.report.domain.campaign.CampaignTotalPerDay;
+import com.ads.report.domain.campaign.CampaignPerDay;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.ads.googleads.v17.common.AdTextAsset;
@@ -243,8 +243,8 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
      * @return Returns a list of TotalPerDay object.
      */
     @Override
-    public List<CampaignTotalPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
-        List<CampaignTotalPerDay> campaignTotalPerDays = new ArrayList<>();
+    public List<CampaignPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
+        List<CampaignPerDay> campaignPerDays = new ArrayList<>();
         String query = String.format("""
             SELECT
               segments.date,
@@ -266,7 +266,7 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                 .build();
             // Iterating GoogleAdsRow objects to convert to TotalPerDay
             for (GoogleAdsRow r: client.search(request).iterateAll()) {
-                CampaignTotalPerDay campaignTotalPerDay = new CampaignTotalPerDay(
+                CampaignPerDay campaignPerDay = new CampaignPerDay(
                     r.getSegments().getDate(),
                     r.getMetrics().getImpressions(),
                     r.getMetrics().getClicks(),
@@ -275,9 +275,9 @@ public class GoogleAdsRepoGateway implements GoogleAdsGateway {
                     r.getSegments().getHour(),
                     r.getSegments().getDayOfWeek().name()
                 );
-                campaignTotalPerDays.add(campaignTotalPerDay);
+                campaignPerDays.add(campaignPerDay);
             }
-            return campaignTotalPerDays;
+            return campaignPerDays;
         } catch (Exception e) {
             throw new RuntimeException("Error searching per day metrics: " + e.getMessage(), e);
         }

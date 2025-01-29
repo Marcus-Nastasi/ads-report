@@ -5,7 +5,7 @@ import com.ads.report.domain.account.AccountMetrics;
 import com.ads.report.domain.campaign.CampaignKeywordMetrics;
 import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.campaign.CampaignTitleAndDescription;
-import com.ads.report.domain.campaign.CampaignTotalPerDay;
+import com.ads.report.domain.campaign.CampaignPerDay;
 
 import java.io.IOException;
 import java.util.List;
@@ -81,11 +81,11 @@ public class GoogleSheetsUseCase {
      *
      * @param spreadsheetId The google sheets id.
      * @param tab The sheets tab to write.
-     * @param campaignTotalPerDays the list of TotalPerDay objects.
+     * @param campaignPerDays the list of TotalPerDay objects.
      * @throws IOException throws IOException if fails.
      */
-    public void totalPerDaysToSheet(String spreadsheetId, String tab, List<CampaignTotalPerDay> campaignTotalPerDays) throws IOException {
-        googleSheetsGateway.totalPerDayToSheets(spreadsheetId, tab, campaignTotalPerDays);
+    public void totalPerDaysToSheet(String spreadsheetId, String tab, List<CampaignPerDay> campaignPerDays) throws IOException {
+        googleSheetsGateway.totalPerDayToSheets(spreadsheetId, tab, campaignPerDays);
     }
 
     /**

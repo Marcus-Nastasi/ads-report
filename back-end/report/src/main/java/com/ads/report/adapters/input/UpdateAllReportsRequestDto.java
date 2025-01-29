@@ -1,6 +1,6 @@
 package com.ads.report.adapters.input;
 
-import com.ads.report.domain.account.UpdateAllReports;
+import com.ads.report.domain.reports.UpdateAllReports;
 
 import java.util.List;
 
