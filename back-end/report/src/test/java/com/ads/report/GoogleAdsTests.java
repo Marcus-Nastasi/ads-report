@@ -83,5 +83,26 @@ public class GoogleAdsTests {
         verify(googleAdsRepoGateway, times(4)).getCampaignMetrics(anyString(), anyString(), anyString(), anyBoolean());
     }
 
+    /**
+     *
+     * Testing 'testConnection'.
+     *
+     */
+    @Test
+    void testConnection() {
+        // Mocking interface's method 'testConnection' to return a list of strings.
+        when(googleAdsRepoGateway.testConnection()).thenReturn(List.of("status", "ok"));
 
+        // Tests if the call throws an exception.
+        assertDoesNotThrow(() -> googleAdsUseCase.testConnection());
+        // Tests if the call's second index response equals to the 'ok'.
+        assertEquals("ok", googleAdsUseCase.testConnection().get(1));
+        // Tests if the call's first index response equals to the 'status'.
+        assertEquals("status", googleAdsUseCase.testConnection().get(0));
+        // Tests if response's campaign id of the first object is null.
+        assertNotNull(googleAdsUseCase.testConnection());
+
+        // Verifies how many times 'getCampaignMetrics' was called.
+        verify(googleAdsRepoGateway, times(4)).testConnection();
+    }
 }
