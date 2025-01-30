@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,12 +76,15 @@ public class GoogleAdsTests {
         "conversionTrackingStatus"
     );
 
+    // Account metrics object.
     AccountMetrics accountMetrics1 = new AccountMetrics(2390828L, "", 0L, 0L, 0d, 0d, 0d, 0d, 0d);
     AccountMetrics accountMetrics2 = new AccountMetrics(43827423L, "", 0L, 0L, 0d, 0d, 0d, 0d, 0d);
 
+    // Campaign metrics from keywords object.
     CampaignKeywordMetrics campaignKeywordMetrics1 = new CampaignKeywordMetrics("", "", "", "", "", "", 0L, 0L, 0d, 0d, 0d, 0d);
     CampaignKeywordMetrics campaignKeywordMetrics2 = new CampaignKeywordMetrics("", "", "", "", "", "", 12L, 120L, 330d, 30d, 30d, 40d);
 
+    // Campaign titles and descriptions object.
     CampaignTitleAndDescription campaignTitleAndDescription = new CampaignTitleAndDescription("", "", "", List.of(), List.of(), 900L, 322L, 4);
 
     /**
@@ -182,6 +186,35 @@ public class GoogleAdsTests {
 
     /**
      *
+     * Testing 'getTotalPerDay' method.
+     *
+     */
+    @Test
+    void getTotalPerDay() {
+        // Mocking interface's method 'getTotalPerDay' to return a list of CampaignPerDay.
+        when(googleAdsRepoGateway.getTotalPerDay(anyString(), anyString(), anyString())).thenReturn(new ArrayList<>());
+
+        // Tests if the call throws an exception.
+        assertDoesNotThrow(() -> googleAdsUseCase.getTotalPerDay("", "2025-01-01", "2025-01-31"));
+        // Tests if the call's first index's response equals in date.
+        assertEquals(
+            "2025-01-01",
+            googleAdsUseCase.getTotalPerDay("", "2025-01-01", "2025-01-31").getFirst().getDate()
+        );
+        // Tests if the call's last index's response equals in date.
+        assertEquals(
+            "2025-01-31",
+            googleAdsUseCase.getTotalPerDay("", "2025-01-01", "2025-01-31").get(30).getDate()
+        );
+        // Tests if response is null.
+        assertNotNull(googleAdsUseCase.getTotalPerDay("", "2025-01-01", "2025-01-31"));
+
+        // Verifies how many times 'getTotalPerDay' was called.
+        verify(googleAdsRepoGateway, times(4)).getTotalPerDay(anyString(), anyString(), anyString());
+    }
+
+    /**
+     *
      * Testing 'getKeywordMetrics' method.
      *
      */
@@ -220,8 +253,8 @@ public class GoogleAdsTests {
         assertDoesNotThrow(() -> googleAdsUseCase.getAdTitleAndDescriptions("123", "", ""));
         // Tests if the call's first index's response equals to the 'campaign name'.
         assertEquals(
-                campaignTitleAndDescription.getCampaignName(),
-                googleAdsUseCase.getAdTitleAndDescriptions("123", "", "").getFirst().getCampaignName()
+            campaignTitleAndDescription.getCampaignName(),
+            googleAdsUseCase.getAdTitleAndDescriptions("123", "", "").getFirst().getCampaignName()
         );
         // Tests if response is null.
         assertNotNull(googleAdsUseCase.getAdTitleAndDescriptions("123", "", ""));
