@@ -2,6 +2,7 @@ package com.ads.report;
 
 import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.domain.account.AccountMetrics;
+import com.ads.report.domain.campaign.CampaignKeywordMetrics;
 import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.ads.report.infrastructure.gateway.GoogleAdsRepoGateway;
@@ -75,6 +76,9 @@ public class GoogleAdsTests {
 
     AccountMetrics accountMetrics1 = new AccountMetrics(2390828L, "", 0L, 0L, 0d, 0d, 0d, 0d, 0d);
     AccountMetrics accountMetrics2 = new AccountMetrics(43827423L, "", 0L, 0L, 0d, 0d, 0d, 0d, 0d);
+
+    CampaignKeywordMetrics campaignKeywordMetrics1 = new CampaignKeywordMetrics("", "", "", "", "", "", 0L, 0L, 0d, 0d, 0d, 0d);
+    CampaignKeywordMetrics campaignKeywordMetrics2 = new CampaignKeywordMetrics("", "", "", "", "", "", 12L, 120L, 330d, 30d, 30d, 40d);
 
     /**
      *
@@ -158,7 +162,7 @@ public class GoogleAdsTests {
      */
     @Test
     void getAccountMetrics() {
-        // Mocking interface's method 'getAccountMetrics' to return a list of strings.
+        // Mocking interface's method 'getAccountMetrics' to return a list of AccountMetrics.
         when(googleAdsRepoGateway.getAccountMetrics(anyString(), anyString(), anyString()))
             .thenReturn(List.of(accountMetrics1, accountMetrics2));
 
@@ -171,5 +175,30 @@ public class GoogleAdsTests {
 
         // Verifies how many times 'getAccountMetrics' was called.
         verify(googleAdsRepoGateway, times(3)).getAccountMetrics(anyString(), anyString(), anyString());
+    }
+
+    /**
+     *
+     * Testing 'getKeywordMetrics' method.
+     *
+     */
+    @Test
+    void getKeywordMetrics() {
+        // Mocking interface's method 'getKeywordMetrics' to return a list of CampaignKeywordMetrics.
+        when(googleAdsRepoGateway.getKeywordMetrics(anyString(), anyString(), anyString(), anyBoolean()))
+            .thenReturn(List.of(campaignKeywordMetrics1, campaignKeywordMetrics2));
+
+        // Tests if the call throws an exception.
+        assertDoesNotThrow(() -> googleAdsUseCase.getKeywordMetrics("123", "", "", true));
+        // Tests if the call's first index's response equals to the 'campaign name'.
+        assertEquals(
+            campaignKeywordMetrics2.getCampaignName(),
+            googleAdsUseCase.getKeywordMetrics("123", "", "", true).get(1).getCampaignName()
+        );
+        // Tests if response's account metrics of the first object is null.
+        assertNotNull(googleAdsUseCase.getKeywordMetrics("123", "", "", true));
+
+        // Verifies how many times 'getKeywordMetrics' was called.
+        verify(googleAdsRepoGateway, times(3)).getKeywordMetrics(anyString(), anyString(), anyString(), anyBoolean());
     }
 }
