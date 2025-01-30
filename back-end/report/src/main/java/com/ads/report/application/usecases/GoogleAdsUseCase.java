@@ -101,6 +101,9 @@ public class GoogleAdsUseCase {
         List<LocalDate> allDates = new ArrayList<>();
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("The start date is after the end date");
+        }
         while (!start.isAfter(end)) {
             allDates.add(start);
             start = start.plusDays(1);
@@ -120,7 +123,7 @@ public class GoogleAdsUseCase {
         for (LocalDate date: allDates) {
             List<CampaignPerDay> dailyMetrics = metricsMap.get(date);
             if (dailyMetrics == null || dailyMetrics.isEmpty()) {
-                completeResults.add(new CampaignPerDay(date.toString(), 0L, 0L, 0d, 0d, 0, "null"));
+                completeResults.add(new CampaignPerDay(date.toString(), 0L, 0L, 0d, 0d, 0, date.getDayOfWeek().name()));
             } else {
                 completeResults.addAll(dailyMetrics);
             }
