@@ -1,6 +1,7 @@
 package com.ads.report;
 
 import com.ads.report.application.usecases.GoogleAdsUseCase;
+import com.ads.report.domain.account.AccountMetrics;
 import com.ads.report.domain.campaign.CampaignMetrics;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.ads.report.infrastructure.gateway.GoogleAdsRepoGateway;
@@ -72,6 +73,9 @@ public class GoogleAdsTests {
         "conversionTrackingStatus"
     );
 
+    AccountMetrics accountMetrics1 = new AccountMetrics(2390828L, "", 0L, 0L, 0d, 0d, 0d, 0d, 0d);
+    AccountMetrics accountMetrics2 = new AccountMetrics(43827423L, "", 0L, 0L, 0d, 0d, 0d, 0d, 0d);
+
     /**
      *
      * Testing get campaigns.
@@ -131,19 +135,41 @@ public class GoogleAdsTests {
      */
     @Test
     void getManagerAccount() {
-        // Mocking interface's method 'testConnection' to return a list of strings.
+        // Mocking interface's method 'getManagerAccount' to return a list of strings.
         when(googleAdsRepoGateway.getManagerAccount(anyString())).thenReturn(managerAccountInfo);
 
         // Tests if the call throws an exception.
         assertDoesNotThrow(() -> googleAdsUseCase.getManagerAccount("123"));
-        // Tests if the call's second index response equals to the 'ok'.
+        // Tests if the call's response is manager account.
         assertTrue(googleAdsUseCase.getManagerAccount("123").isManager());
-        // Tests if the call's first index response equals to the 'status'.
+        // Tests if the call's response name equals to the name passed.
         assertEquals(managerAccountInfo.getName(), googleAdsUseCase.getManagerAccount("123").getName());
-        // Tests if response's campaign id of the first object is null.
+        // Tests if response is not null.
         assertNotNull(googleAdsUseCase.getManagerAccount("123"));
 
-        // Verifies how many times 'getCampaignMetrics' was called.
+        // Verifies how many times 'getManagerAccount' was called.
         verify(googleAdsRepoGateway, times(4)).getManagerAccount(anyString());
+    }
+
+    /**
+     *
+     * Testing 'getAccountMetrics' method.
+     *
+     */
+    @Test
+    void getAccountMetrics() {
+        // Mocking interface's method 'getAccountMetrics' to return a list of strings.
+        when(googleAdsRepoGateway.getAccountMetrics(anyString(), anyString(), anyString()))
+            .thenReturn(List.of(accountMetrics1, accountMetrics2));
+
+        // Tests if the call throws an exception.
+        assertDoesNotThrow(() -> googleAdsUseCase.getAccountMetrics("123", "", ""));
+        // Tests if the call's first index's response equals to the 'customerId'.
+        assertEquals(accountMetrics1.getCustomerId(), googleAdsUseCase.getAccountMetrics("123", "", "").getFirst().getCustomerId());
+        // Tests if response's account metrics of the first object is null.
+        assertNotNull(googleAdsUseCase.getAccountMetrics("123", "", ""));
+
+        // Verifies how many times 'getAccountMetrics' was called.
+        verify(googleAdsRepoGateway, times(3)).getAccountMetrics(anyString(), anyString(), anyString());
     }
 }

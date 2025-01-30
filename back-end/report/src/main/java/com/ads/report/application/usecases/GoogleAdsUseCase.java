@@ -118,8 +118,8 @@ public class GoogleAdsUseCase {
         // Creating a list to have the complete results.
         List<CampaignPerDay> completeResults = new ArrayList<>();
         for (LocalDate date: allDates) {
-            List<CampaignPerDay> dailyMetrics = metricsMap.getOrDefault(date, new ArrayList<>());
-            if (dailyMetrics.isEmpty()) {
+            List<CampaignPerDay> dailyMetrics = metricsMap.get(date);
+            if (dailyMetrics == null || dailyMetrics.isEmpty()) {
                 completeResults.add(new CampaignPerDay(date.toString(), 0L, 0L, 0d, 0d, 0, "null"));
             } else {
                 completeResults.addAll(dailyMetrics);
