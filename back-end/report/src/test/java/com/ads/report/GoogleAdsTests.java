@@ -4,6 +4,7 @@ import com.ads.report.application.usecases.GoogleAdsUseCase;
 import com.ads.report.domain.account.AccountMetrics;
 import com.ads.report.domain.campaign.CampaignKeywordMetrics;
 import com.ads.report.domain.campaign.CampaignMetrics;
+import com.ads.report.domain.campaign.CampaignTitleAndDescription;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 import com.ads.report.infrastructure.gateway.GoogleAdsRepoGateway;
 import org.junit.jupiter.api.Test;
@@ -79,6 +80,8 @@ public class GoogleAdsTests {
 
     CampaignKeywordMetrics campaignKeywordMetrics1 = new CampaignKeywordMetrics("", "", "", "", "", "", 0L, 0L, 0d, 0d, 0d, 0d);
     CampaignKeywordMetrics campaignKeywordMetrics2 = new CampaignKeywordMetrics("", "", "", "", "", "", 12L, 120L, 330d, 30d, 30d, 40d);
+
+    CampaignTitleAndDescription campaignTitleAndDescription = new CampaignTitleAndDescription("", "", "", List.of(), List.of(), 900L, 322L, 4);
 
     /**
      *
@@ -200,5 +203,30 @@ public class GoogleAdsTests {
 
         // Verifies how many times 'getKeywordMetrics' was called.
         verify(googleAdsRepoGateway, times(3)).getKeywordMetrics(anyString(), anyString(), anyString(), anyBoolean());
+    }
+
+    /**
+     *
+     * Testing 'getAdTitleAndDescriptions' method.
+     *
+     */
+    @Test
+    void getAdTitleAndDescriptions() {
+        // Mocking interface's method 'getAdTitleAndDescriptions' to return a list of CampaignKeywordMetrics.
+        when(googleAdsRepoGateway.getAdTitleAndDescriptions(anyString(), anyString(), anyString()))
+            .thenReturn(List.of(campaignTitleAndDescription));
+
+        // Tests if the call throws an exception.
+        assertDoesNotThrow(() -> googleAdsUseCase.getAdTitleAndDescriptions("123", "", ""));
+        // Tests if the call's first index's response equals to the 'campaign name'.
+        assertEquals(
+                campaignTitleAndDescription.getCampaignName(),
+                googleAdsUseCase.getAdTitleAndDescriptions("123", "", "").getFirst().getCampaignName()
+        );
+        // Tests if response is null.
+        assertNotNull(googleAdsUseCase.getAdTitleAndDescriptions("123", "", ""));
+
+        // Verifies how many times 'getAdTitleAndDescriptions' was called.
+        verify(googleAdsRepoGateway, times(3)).getAdTitleAndDescriptions(anyString(), anyString(), anyString());
     }
 }
