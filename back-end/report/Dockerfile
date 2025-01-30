@@ -12,7 +12,7 @@ RUN mvn dependency:go-offline
 COPY src ./src
 
 # Project copile and create final JAR
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 # Final phase
 FROM openjdk:21-oracle
