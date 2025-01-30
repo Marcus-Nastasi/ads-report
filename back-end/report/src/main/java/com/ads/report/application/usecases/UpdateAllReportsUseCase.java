@@ -18,6 +18,7 @@ public class UpdateAllReportsUseCase {
 
     private final GoogleAdsGateway googleAdsGateway;
     private final GoogleSheetsGateway googleSheetsGateway;
+    private final GoogleAdsUseCase googleAdsUseCase;
 
     /**
      *
@@ -26,9 +27,10 @@ public class UpdateAllReportsUseCase {
      * @param googleAdsGateway the google ads gateway
      * @param googleSheetsGateway the google sheets gateway
      */
-    public UpdateAllReportsUseCase(GoogleAdsGateway googleAdsGateway, GoogleSheetsGateway googleSheetsGateway) {
+    public UpdateAllReportsUseCase(GoogleAdsGateway googleAdsGateway, GoogleSheetsGateway googleSheetsGateway, GoogleAdsUseCase googleAdsUseCase) {
         this.googleAdsGateway = googleAdsGateway;
         this.googleSheetsGateway = googleSheetsGateway;
+        this.googleAdsUseCase = googleAdsUseCase;
     }
 
     /**
@@ -69,7 +71,7 @@ public class UpdateAllReportsUseCase {
                 googleSheetsGateway.totalPerDayToSheets(
                     r.getSpreadsheetId(),
                     r.getClient() + "-grafico",
-                    googleAdsGateway.getTotalPerDay(r.getCustomerId(), r.getStartDate(), r.getEndDate())
+                    googleAdsUseCase.getTotalPerDay(r.getCustomerId(), r.getStartDate(), r.getEndDate())
                 );
             } catch (IOException e) {
                 throw new RuntimeException(e);

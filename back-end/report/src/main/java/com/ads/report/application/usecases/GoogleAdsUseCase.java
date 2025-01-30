@@ -8,7 +8,11 @@ import com.ads.report.domain.campaign.CampaignTitleAndDescription;
 import com.ads.report.domain.campaign.CampaignPerDay;
 import com.ads.report.domain.manager.ManagerAccountInfo;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The use cases of google ads api calls.
@@ -92,7 +96,36 @@ public class GoogleAdsUseCase {
      * @return Returns a list of TotalPerDay object.
      */
     public List<CampaignPerDay> getTotalPerDay(String customerId, String startDate, String endDate) {
-        return googleAdsGateway.getTotalPerDay(customerId, startDate, endDate);
+        List<CampaignPerDay> campaignPerDays = googleAdsGateway.getTotalPerDay(customerId, startDate, endDate);
+        // Creating a list with all dates from the given period.
+        List<LocalDate> allDates = new ArrayList<>();
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        while (!start.isAfter(end)) {
+            allDates.add(start);
+            start = start.plusDays(1);
+        }
+        // Creating a map to group metrics of a single date.
+        Map<LocalDate, List<CampaignPerDay>> metricsMap = new HashMap<>();
+        for (CampaignPerDay m: campaignPerDays) {
+            LocalDate date = LocalDate.parse(m.getDate());
+            if (!metricsMap.containsKey(date)) {
+                metricsMap.put(date, new ArrayList<>());
+            } else {
+                metricsMap.get(date).add(m);
+            }
+        }
+        // Creating a list to have the complete results.
+        List<CampaignPerDay> completeResults = new ArrayList<>();
+        for (LocalDate date: allDates) {
+            List<CampaignPerDay> dailyMetrics = metricsMap.getOrDefault(date, new ArrayList<>());
+            if (dailyMetrics.isEmpty()) {
+                completeResults.add(new CampaignPerDay(date.toString(), 0L, 0L, 0d, 0d, 0, "null"));
+            } else {
+                completeResults.addAll(dailyMetrics);
+            }
+        }
+        return completeResults;
     }
 
     /**
